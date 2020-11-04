@@ -33,7 +33,7 @@
 #include <src/node.h>
 #include "native_gecko.h"
 #include "gatt_db.h"
-
+#include "mesh_lib.h"
 
 
 /* Timer definitions */
@@ -170,7 +170,12 @@ static void set_device_name(bd_addr *pAddr)
   uint16_t res;
 
   // create unique device name using the last two bytes of the Bluetooth address
-  sprintf(name, "pub node %02x:%02x", pAddr->addr[1], pAddr->addr[0]);
+  if(DeviceIsOnOffPublisher()){
+	  sprintf(name, "pub node %02x:%02x", pAddr->addr[1], pAddr->addr[0]);
+  }
+  else{
+	  sprintf(name, "sub node %02x:%02x", pAddr->addr[1], pAddr->addr[0]);
+  }
 
   log("Device name: '%s'\r\n", name);
 
@@ -288,11 +293,22 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 
       errorcode_t     result;
 
-      // Initialize generic client models
-      result = gecko_cmd_mesh_generic_client_init()->result;
-      if (result) {
-          log("gecko_cmd_mesh_generic_client_init failed, code 0x%x\r\n", result);
+      if(DeviceUsesClientModel()){
+          result = gecko_cmd_mesh_generic_client_init()->result;
+          if (result) {
+              log("gecko_cmd_mesh_generic_client_init failed, code 0x%x\r\n", result);
+          }
       }
+      if(DeviceUsesServerModel()){
+          result = gecko_cmd_mesh_generic_server_init()->result;
+          if (result) {
+              log("gecko_cmd_mesh_generic_client_init failed, code 0x%x\r\n", result);
+          }
+
+
+      }
+      // Initialize generic client models
+
 
       struct gecko_msg_mesh_node_initialized_evt_t *pData = (struct gecko_msg_mesh_node_initialized_evt_t *)&(pEvt->data);
 
@@ -318,6 +334,7 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
         gecko_cmd_mesh_node_start_unprov_beaconing(PB_ADV | PB_GATT);
       }
 
+
       break;
 
 
@@ -328,7 +345,23 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
     	// for each PB0 event (press and release) call change_switch_position()
     	// with the appropriate parameter. change_switch_position() is defined in
     	// node.c
-
+    	int event = pEvt->data.evt_system_external_signal.extsignals;
+    	if(event == EXT_SIGNAL_PB0_PRESS){
+    		if(DeviceIsOnOffPublisher()){
+    			change_switch_position(1);
+    			DI_Print("PB0 Pressed",DI_ROW_LIGHTNESS);
+    		}
+    		sprintf(buf, "PB0 Pressed\n\r");
+    		log(buf);
+    	}
+    	if(event == EXT_SIGNAL_PB0_RELEASE){
+    		if(DeviceIsOnOffPublisher()){
+    			change_switch_position(0);
+    			DI_Print("PB0 Released",DI_ROW_LIGHTNESS);
+    		}
+    		sprintf(buf, "PB0 Released\n\r");
+    		log(buf);
+    	}
 
 
 
@@ -465,7 +498,18 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
       break;
 
 
-
+    case gecko_evt_mesh_generic_server_client_request_id:
+    	log("Server Client Request\n\r");
+    	mesh_lib_generic_server_event_handler(pEvt);
+    	break;
+    case gecko_evt_mesh_generic_server_state_changed_id:
+    	log("Server State Changed\n\r");
+    	mesh_lib_generic_server_event_handler(pEvt);
+    	break;
+    case gecko_evt_mesh_generic_server_state_recall_id:
+    	log("Server State Recall\n\r");
+    	mesh_lib_generic_server_event_handler(pEvt);
+    	break;
 
 
     default:
