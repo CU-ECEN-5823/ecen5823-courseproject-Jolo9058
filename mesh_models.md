@@ -26,12 +26,7 @@ Values in the model are Generic Power Actual, Generic Power Last, Generic Power 
 |------|-----------------------|--------------------------|
 |Generic Power Actual| Sets element’s power level as a linear percentage of the maximum available. Note that with this state set to zero, the device is permitted to continue to be sufficiently powered for wireless communication to remain available. It is like putting the device into standby mode. |
 Sets which sleep mode the node will enter. Enumerations are:
-100: Do not sleep
-75: EM1
-50: EM2
-25: EM3
-0: EM4
-All other values should be considered illegal.|
+100: Do not sleep, 75: EM1, 50: EM2, 25: EM3, 0: EM4, All other values should be considered illegal.|
 |---|---|---|
 |Generic Power Last|
  Records the last known value of generic power actual, so the last power level can be restored when the device is switched on. This behavior is governed by a state binding with the generic onoff state and whether or not the generic power default state is zero. |
