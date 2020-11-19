@@ -33,7 +33,7 @@
 
 #include <stdint.h>
 #include "native_gecko.h"
-#include "display_interface.h"
+
 
 /*******************************************************************************
    Public Macros and Definitions
@@ -71,18 +71,5 @@ void change_switch_position(uint8_t position);
 void handle_retrans_timer_evt(struct gecko_cmd_packet *pEvt);
 
 
-#endif /* SWITCH_H */
 
-////callback function for request sent to server
-//void onoff_request(uint16_t model_id,
-//        uint16_t element_index,
-//        uint16_t client_addr,
-//        uint16_t server_addr,
-//        uint16_t appkey_index,
-//        const struct mesh_generic_request *request,
-//        uint32_t transition_ms,
-//        uint16_t delay_ms,
-//        uint8_t request_flags);
-//
-//// callback function for state change
-//static void onoff_change(void);
+#endif /* SWITCH_H */

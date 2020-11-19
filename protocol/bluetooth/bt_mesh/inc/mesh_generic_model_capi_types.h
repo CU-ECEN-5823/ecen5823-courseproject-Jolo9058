@@ -546,8 +546,6 @@ struct mesh_generic_request {
   };
 };
 
-
-
 /** Use default transition time */
 #define MESH_GENERIC_DEFAULT_TRANS_MS 0xffffffff
 

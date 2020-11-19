@@ -33,8 +33,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "ble_mesh_device_type.h"
-
 /* Bluetooth stack headers */
 #include "native_gecko.h"
 #include "mesh_generic_model_capi_types.h"
@@ -44,7 +42,6 @@
 
 /* Timer definitions */
 #include "app_timer.h"
-
 
 
 
@@ -70,52 +67,6 @@ static uint8_t onoff_request_count;
 /// on/off transaction identifier
 static uint8_t onoff_trid = 0;
 
-/***************************************************************************//**
- * Update generic on/off state and publish model state to the network.
- *
- * @param[in] element_index  Server model element index.
- * @param[in] remaining_ms   The remaining time in milliseconds.
- *
- * @return Status of the update and publish operation.
- *         Returns bg_err_success (0) if succeed, non-zero otherwise.
- ******************************************************************************/
-
-
-
-
-static void onoff_request(uint16_t model_id,
-                          uint16_t element_index,
-                          uint16_t client_addr,
-                          uint16_t server_addr,
-                          uint16_t appkey_index,
-                          const struct mesh_generic_request *request,
-                          uint32_t transition_ms,
-                          uint16_t delay_ms,
-                          uint8_t request_flags)
-{
-  log("ON/OFF request: requested state=<%s>, transition=%lu, delay=%u\r\n",
-      request->on_off ? "ON" : "OFF", transition_ms, delay_ms);
-
-  if (switch_pos == request->on_off) {
-    log("Request for current state received; no op\r\n");
-  } else {
-    log("Turning lightbulb <%s>\r\n", request->on_off ? "ON" : "OFF");
-
-      switch_pos = request->on_off;
-      if(switch_pos){
-    	  DI_Print("PB0 Pressed", DI_ROW_LIGHTNESS);
-      }
-      else{
-    	  DI_Print("PB0 Released", DI_ROW_LIGHTNESS);
-      }
-    }
-
-
-}
-
-
-
-
 
 /*******************************************************************************
  * node initialization.
@@ -124,26 +75,8 @@ static void onoff_request(uint16_t model_id,
  ******************************************************************************/
 void node_init(void)
 {
-
-
-
-  if(DeviceIsOnOffPublisher()){
-	  // Initialize mesh lib, up to 8 models
-	  mesh_lib_init(malloc, free, 8);
-  }
-  if(DeviceIsOnOffSubscriber()){
-
-	  mesh_lib_init(malloc,free,9);
-	  mesh_lib_generic_server_register_handler(MESH_GENERIC_ON_OFF_SERVER_MODEL_ID,
-			                                           0,
-			                                           onoff_request,
-			                                           NULL,
-			                                           NULL);
-//	  mesh_lib_generic_server_update();
-//	  mesh_lib_generic_server_publish();
-  }
-
-
+  // Initialize mesh lib, up to 8 models
+  mesh_lib_init(malloc, free, 8);
 }
 
 /***************************************************************************//**
@@ -271,6 +204,5 @@ void handle_retrans_timer_evt(struct gecko_cmd_packet *pEvt)
   }
 
 } // handle_retrans_timer_evt()
-
 
 

@@ -69,25 +69,11 @@ void button_interrupt(uint8_t pin)
 	// edit #1
 	// Add appropriate code to call gecko_external_signal() for PB0 press
 	// and release. See gpio.h for external signal #defines
-//#define EXT_SIGNAL_PB0_PRESS             0x01
-//#define EXT_SIGNAL_PB0_RELEASE           0x02
-//#define EXT_SIGNAL_PB1_PRESS             0x04
-//#define EXT_SIGNAL_PB1_RELEASE           0x08
-
-	if(pin == BSP_BUTTON0_PIN){ //PB0 event
-		int pin_state = !GPIO_PinInGet(BSP_BUTTON0_PORT, BSP_BUTTON0_PIN);
-		if(pin_state){ //pressed
-			gecko_external_signal(EXT_SIGNAL_PB0_PRESS);
-		}
-		else{ //released
-			gecko_external_signal(EXT_SIGNAL_PB0_RELEASE);
-		}
-	}
-
 
 
 
 } // button_interrupt()
+
 
 
 /*******************************************************************************
