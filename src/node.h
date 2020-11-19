@@ -33,7 +33,18 @@
 
 #include <stdint.h>
 #include "native_gecko.h"
+#include "gecko_configuration.h"
+#include "gpio.h"
 
+
+#include "sleep.h"
+#include "em_core.h"
+#include "i2cspm.h"
+#include "native_gecko.h"
+#include "bg_types.h"
+#include "gatt_db.h"
+
+#include "display.h"
 
 /*******************************************************************************
    Public Macros and Definitions
