@@ -10,8 +10,12 @@ This repository contains the course project submissions for the ECEN 5823 IoT Em
 ## Team Members
 Update team members names
 
-Aaksha Jaywant
+1) Aaksha Jaywant
 
-Joseph Lopez
+2) Joseph Lopez
 
-Atharv Desai
+3)  Atharv Desai 
+
+
+
+
