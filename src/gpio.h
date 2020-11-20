@@ -31,12 +31,24 @@
 #ifndef BUTTONS_H
 #define BUTTONS_H
 
+/* Retarget serial headers */
+#include "retargetserial.h"
+#include <stdio.h>
+#ifdef ENABLE_LOGGING
+#define log(...) printf(__VA_ARGS__)
+#else
+#define log(...)
+#endif
 
-
+//LowPowerNode == 1  for sound sensor
+//LowPowerNode == 2  for PIR sensor
+#define LowPowerNode 2
 /*******************************************************************************
  * External signal definitions. These are used to signal button press events
  * from GPIO interrupt handler to application.
  ******************************************************************************/
+
+
 
 #define EXT_SIGNAL_PB0_PRESS             0x01
 #define EXT_SIGNAL_PB0_RELEASE           0x02
@@ -56,6 +68,15 @@ void button_init(void);
  ******************************************************************************/
 void enable_button_interrupts(void);
 
+#if LowPowerNode == 1
+#include <stdint.h>
+#define soundPort gpioPortC
+#define soundGate 8
+uint32_t GPIOsound;
+void sound_init(void);
+void enable_sound_interrupts(void);
+void sound_interrupt(void);
+#endif
 
 
 #endif /* BUTTONS_H */

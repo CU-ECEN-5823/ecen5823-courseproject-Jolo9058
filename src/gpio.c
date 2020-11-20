@@ -49,6 +49,34 @@ void button_init(void)
 
 }
 
+
+
+#if LowPowerNode == 1
+void sound_init(void)
+{
+  // configure pushbutton PB0 and PB1 as inputs, with pull-up enabled
+  GPIO_PinModeSet(soundPort, soundGate, gpioModeInputPull, 1);
+//  GPIO_PinModeSet(BSP_BUTTON1_PORT, BSP_BUTTON1_PIN, gpioModeInputPull, 1);
+}
+
+
+void sound_interrupt(void)
+{
+	log("In sound interrupt\n\r");
+	GPIOsound = GPIO_PinInGet(soundPort,soundGate);
+			if(GPIOsound == 0)
+			{
+				log("Quiet\n\r");
+				//gecko_external_signal(EXT_SIGNAL_PB0_PRESS);
+			}
+			else
+			{
+				log("Noisy\n\r");
+				//gecko_external_signal(EXT_SIGNAL_PB0_RELEASE);
+			}
+}
+#endif
+
 /***************************************************************************//**
  * This is a callback function that is invoked each time a GPIO interrupt
  * in one of the pushbutton inputs occurs. Pin number is passed as parameter.
@@ -131,4 +159,43 @@ void enable_button_interrupts(void)
 } // enable_button_interrupts()
 
 
+#if LowPowerNode == 1
+void enable_sound_interrupts(void)
+{
 
+    // See: ./platform/emdrv/gpiointerrupt/src/gpiointerrupt.c
+	//
+    // We can't write our own GPIO_EVEN_IRQHandler() and GPIO_ODD_IRQHandler()
+	// routines because these are defined in this file. SiLabs has built an
+	// ISR function registration and dispatching system. Don't know why?
+	//
+	// The calling sequence is:
+	//
+	//    GPIO_EVEN_IRQHandler() {
+	//       iflags = GPIO_IntGetEnabled() & 0x00005555;
+	//       GPIO_IntClear(iflags);
+	//       GPIOINT_IRQDispatcher(iflags);
+	//    }
+	//
+	//    GPIOINT_IRQDispatcher(iflags) {
+	//       calls functions in table gpioCallbacks[ ] array
+	//    }
+	//
+	//    We use GPIOINT_CallbackRegister() to place pointers to functions
+	//    (known as callbacks) into the gpioCallbacks[ ] array
+
+  GPIOINT_Init();
+
+  /* configure interrupt for PB0 and PB1, both falling and rising edges */
+  GPIO_ExtIntConfig(soundPort, soundGate, soundGate, true, true, true);
+
+//  GPIO_ExtIntConfig(BSP_BUTTON1_PORT, BSP_BUTTON1_PIN, BSP_BUTTON1_PIN,
+//                   true, true, true);
+
+
+  /* register the callback function that is invoked whenS interrupt occurs */
+  GPIOINT_CallbackRegister(soundGate,sound_interrupt);
+//  GPIOINT_CallbackRegister(BSP_BUTTON1_PIN, button_interrupt);
+
+} // enable_button_interrupts()
+#endif

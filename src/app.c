@@ -131,6 +131,11 @@ void appMain(const gecko_configuration_t *pConfig)
   RETARGET_SerialInit();
   DI_Init();
 
+#if LowPowerNode == 1
+  sound_init();
+  enable_sound_interrupts();
+#endif
+
   // Initialize buttons. Note: some radio boards share the same GPIO
   // for button & LED. Initialization is done in this order so that default
   // configuration will be "button" for those radio boards with shared pins.
