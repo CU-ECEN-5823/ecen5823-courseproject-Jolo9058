@@ -198,4 +198,71 @@ void enable_sound_interrupts(void)
 //  GPIOINT_CallbackRegister(BSP_BUTTON1_PIN, button_interrupt);
 
 } // enable_button_interrupts()
+#else if LowPowerNode == 2
+
+/*******************************************************************************
+ * GPIO initialization. Configure pushbuttons GPIO PC9 as output for external
+ * LED indicator
+ ******************************************************************************/
+
+void gpioInit()
+{
+	GPIO_DriveStrengthSet(PIRLED_port1, gpioDriveStrengthWeakAlternateStrong);
+	GPIO_PinModeSet(PIRLED_port1, PIRLED_pin1, gpioModePushPull, false);
+
+}
+
+void gpioLedPIRSetOn()
+{
+	GPIO_PinOutSet(PIRLED_port1,PIRLED_pin1);
+}
+void gpioLedPIRSetOff()
+{
+	GPIO_PinOutClear(PIRLED_port1,PIRLED_pin1);
+}
+
+/*******************************************************************************
+ * GPIO initialization for PIR Interrupt. Configure pushbuttons GPIO PC8 as input
+ * for external PIR interrupt
+ ******************************************************************************/
+void pir_init()
+{
+	GPIO_PinModeSet(PIRLED_port, PIRLED_pin, gpioModeInput, 0);
+	GPIO_ExtIntConfig(PIRLED_port,PIRLED_pin, PIRLED_pin, true, true, true);
+	CMU_ClockEnable(cmuClock_GPIO, true);
+	GPIOINT_Init();
+	GPIOINT_CallbackRegister(PIRLED_pin, pir_interrupt);
+
+}
+
+
+/***************************************************************************//**
+ * This is a callback function that is invoked each time a GPIO interrupt
+ * in one of the GPIO based inputs occurs.
+ *
+ * @param[in] None
+ *
+ * @note This function is called from ISR context and therefore it is
+ *       not possible to call any BGAPI functions directly. The GPIO state
+ *       change is signaled to the application using gecko_external_signal()
+ *       that will generate an event gecko_evt_system_external_signal_id
+ *       which is then handled in the main loop.
+ ******************************************************************************/
+void pir_interrupt()
+{
+
+	if(GPIO_PinInGet(PIRLED_port,PIRLED_pin) == 1)
+		{
+		printf("motion detected \n\r");
+		gpioLedPIRSetOn();
+		}
+	// gecko_external_signal(EXT_SIGNAL_PIR);       // PIR based external event for further sprints
+}
+
+
+
+
+
 #endif
+
+

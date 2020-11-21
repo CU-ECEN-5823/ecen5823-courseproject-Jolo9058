@@ -134,6 +134,10 @@ void appMain(const gecko_configuration_t *pConfig)
 #if LowPowerNode == 1
   sound_init();
   enable_sound_interrupts();
+#else if LowPowerNode == 2
+  gpioInit();
+  pir_init();
+
 #endif
 
   // Initialize buttons. Note: some radio boards share the same GPIO

@@ -34,6 +34,7 @@
 /* Retarget serial headers */
 #include "retargetserial.h"
 #include <stdio.h>
+#include "em_cmu.h"
 #ifdef ENABLE_LOGGING
 #define log(...) printf(__VA_ARGS__)
 #else
@@ -76,7 +77,17 @@ uint32_t GPIOsound;
 void sound_init(void);
 void enable_sound_interrupts(void);
 void sound_interrupt(void);
-#endif
+#else if LowPowerNode == 2
 
+#define	PIRLED_port gpioPortC   // Pin P5 on the breakout board
+#define PIRLED_pin  8
+#define	PIRLED_port1 gpioPortC   // Pin P5 on the breakout board
+#define PIRLED_pin1  9
+void gpioLedPIRSetOn(void);
+void gpioLedPIRSetOff(void);
+void gpioInit(void);
+void pir_init(void);
+void pir_interrupt(void);
+#endif
 
 #endif /* BUTTONS_H */
