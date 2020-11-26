@@ -209,15 +209,13 @@ static void send_onoff_request(uint8_t retrans)
  ******************************************************************************/
 void change_switch_position(uint8_t position)
 {
-
+#if PIR_SENSOR
   switch_pos = position;
 
   // Turns light ON or OFF, using Generic OnOff model
-  log("PB0 ");
+  log("PIR sensor ");
   if (switch_pos) {
-    log("pressed\r\n");
-  } else {
-    log("released\r\n");
+    log("Human Presence Detected\r\n");
   }
 
   onoff_request_count = 3; // Request is sent 3 times to improve reliability
@@ -231,6 +229,9 @@ void change_switch_position(uint8_t position)
                                       RETRANS_ONOFF_TIMER,
                                       REPEATING);
   }
+
+#endif
+
 
 } // change_switch_position()
 

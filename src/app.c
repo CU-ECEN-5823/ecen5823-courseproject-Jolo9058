@@ -108,7 +108,7 @@ void appMain(const gecko_configuration_t *pConfig)
 
   // Initialize debug prints and display interface
   RETARGET_SerialInit();
-  DI_Init();
+
 
 #if NOISE_SENSOR
   sound_init();
@@ -116,7 +116,7 @@ void appMain(const gecko_configuration_t *pConfig)
 #endif
 #if PIR_SENSOR
   gpioInit();
-  pir_init();
+  //pir_init();
 
 #endif
 
@@ -124,6 +124,7 @@ void appMain(const gecko_configuration_t *pConfig)
   // for button & LED. Initialization is done in this order so that default
   // configuration will be "button" for those radio boards with shared pins.
   button_init();
+  DI_Init();
 
   while (1) {
     // Event pointer for handling events
@@ -176,7 +177,9 @@ static void set_device_name(bd_addr *pAddr)
 
 #else
   // create unique device name using the last two bytes of the Bluetooth address
-  sprintf(name, "pub node %02x:%02x", pAddr->addr[1], pAddr->addr[0]);
+#if PIR_SENSOR
+  sprintf(name, "PIR node %02x:%02x", pAddr->addr[1], pAddr->addr[0]);
+#endif
 
   log("Device name: '%s'\r\n", name);
 
@@ -1143,11 +1146,11 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 
 	        _my_address = pData->address;
 
-	        enable_button_interrupts();
+	       // enable_button_interrupts();
 
 	        provisioning_finished = 1;
 	        node_init();
-
+	        pir_init();
 	        DI_Print("provisioned", DI_ROW_STATUS);
 
 	      } else {
@@ -1171,7 +1174,11 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 	    	// with the appropriate parameter. change_switch_position() is defined in
 	    	// node.c
 
-
+	    	if ((pEvt->data.evt_system_external_signal.extsignals & EXT_SIGNAL_PIR) == 0x16)
+	    	    			 {
+	    	    		log("PIR external event_ #1");
+	    	    		change_switch_position(ON);
+	    	    			 }
 
 
 
@@ -1198,7 +1205,8 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 
 	      DI_Print("provisioned", DI_ROW_STATUS);
 
-	      enable_button_interrupts();
+	      //enable_button_interrupts();
+	      pir_init();
 
 	      break;
 

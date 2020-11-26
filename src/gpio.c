@@ -269,8 +269,9 @@ void pir_interrupt()
 		{
 		printf("motion detected \n\r");
 		gpioLedPIRSetOn();
+		gecko_external_signal(EXT_SIGNAL_PIR);       // PIR based external event
 		}
-	// gecko_external_signal(EXT_SIGNAL_PIR);       // PIR based external event for further sprints
+
 }
 
 

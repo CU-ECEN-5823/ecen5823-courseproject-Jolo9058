@@ -43,7 +43,7 @@
 
 //LowPowerNode == 1  for sound sensor
 //LowPowerNode == 2  for PIR sensor
-#define LowPowerNode 2
+//#define LowPowerNode 2
 /*******************************************************************************
  * External signal definitions. These are used to signal button press events
  * from GPIO interrupt handler to application.
@@ -55,7 +55,7 @@
 #define EXT_SIGNAL_PB0_RELEASE           0x02
 #define EXT_SIGNAL_PB1_PRESS             0x04
 #define EXT_SIGNAL_PB1_RELEASE           0x08
-
+#define EXT_SIGNAL_PIR                   0x16
 
 
 /***************************************************************************//**
@@ -77,7 +77,7 @@ uint32_t GPIOsound;
 void sound_init(void);
 void enable_sound_interrupts(void);
 void sound_interrupt(void);
-#else if LowPowerNode == 2
+#else if PIR_SENSOR
 
 #define	PIRLED_port gpioPortC   // Pin P5 on the breakout board
 #define PIRLED_pin  8
