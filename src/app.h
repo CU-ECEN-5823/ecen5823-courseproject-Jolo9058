@@ -37,6 +37,31 @@
 // is implemented.
 #include <src/ble_mesh_device_type.h>
 
+/* Bluetooth stack headers */
+#include <src/gpio.h>
+#include <src/node.h>
+#include "native_gecko.h"
+#include "gatt_db.h"
+
+
+
+/* Timer definitions */
+#include "app_timer.h"
+
+#include "app.h"
+
+
+
+
+/* Coex header */
+#include "coexistence-ble.h"
+
+/* Display Interface header */
+#include "display_interface.h"
+
+/* Retarget serial headers */
+#include "retargetserial.h"
+#include <stdio.h>
 
 
 /***************************************************************************//**
@@ -45,6 +70,6 @@
  ******************************************************************************/
 void appMain(const gecko_configuration_t *pConfig);
 
-
+int get_alarm_deactivate();
 
 #endif /* APP_H */

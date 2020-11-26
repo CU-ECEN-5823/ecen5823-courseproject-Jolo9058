@@ -10,11 +10,24 @@
 #ifndef SRC_BLE_MESH_DEVICE_TYPE_H_
 #define SRC_BLE_MESH_DEVICE_TYPE_H_
 
+
+
+#define FRIEND_NODE 1
+#define LIGHT_SENSOR 0
+#define NOISE_SENSOR 0
+#define PIR_SENSOR 0
+
+
 /**
  * Set to 1 to build an on/off publisher client model for Assignment 10
  * Set to 0 to build an on/off subscriber server model for Assignment 10
  */
-#define DEVICE_IS_ONOFF_PUBLISHER			1
+#if !FRIEND_NODE
+#define DEVICE_IS_ONOFF_PUBLISHER			1 //sensor nodes are publishers
+#endif
+#if FRIEND_NODE
+#define DEVICE_IS_ONOFF_PUBLISHER			0 //friend node is a subscriber
+#endif
 
 #if DEVICE_IS_ONOFF_PUBLISHER
 #define DEVICE_USES_BLE_MESH_CLIENT_MODEL 	1

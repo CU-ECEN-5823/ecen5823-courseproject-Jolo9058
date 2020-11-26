@@ -28,30 +28,9 @@
  *
  ******************************************************************************/
 
-/* Bluetooth stack headers */
-#include <src/gpio.h>
-#include <src/node.h>
-#include "native_gecko.h"
-#include "gatt_db.h"
-
-
-
-/* Timer definitions */
-#include "app_timer.h"
 
 #include "app.h"
-
-
-
-/* Coex header */
-#include "coexistence-ble.h"
-
-/* Display Interface header */
-#include "display_interface.h"
-
-/* Retarget serial headers */
-#include "retargetserial.h"
-#include <stdio.h>
+#include "alarm.h"
 
 #ifdef ENABLE_LOGGING
 #define log(...) printf(__VA_ARGS__)
@@ -59,13 +38,7 @@
 #define log(...)
 #endif
 
-
-#define FRIEND_NODE 1
-#define LIGHT_SENSOR 0
-#define NOISE_SENSOR 0
-#define PIR_SENSOR 0
-
-
+#define DEACTIVATE_TIME_S 10 //#seconds to deactivate alarms, in units of seconds
 
 /*******************************************************************************
  * Provisioning bearers defines.
@@ -87,6 +60,7 @@ static uint8_t num_connections = 0;
 static uint8_t conn_handle = 0xFF;
 /// Flag for indicating that provisioning procedure is finished
 static uint8_t provisioning_finished = 0;
+
 
 /*******************************************************************************
  * Function prototypes.
@@ -136,10 +110,11 @@ void appMain(const gecko_configuration_t *pConfig)
   RETARGET_SerialInit();
   DI_Init();
 
-#if LowPowerNode == 1
+#if NOISE_SENSOR
   sound_init();
   enable_sound_interrupts();
-#else if LowPowerNode == 2
+#endif
+#if PIR_SENSOR
   gpioInit();
   pir_init();
 
@@ -183,6 +158,23 @@ static void set_device_name(bd_addr *pAddr)
   char name[20];
   uint16_t res;
 
+
+#if FRIEND_NODE
+  // create unique device name using the last two bytes of the Bluetooth address
+  sprintf(name, "friend node %02x:%02x", pAddr->addr[1], pAddr->addr[0]);
+
+  log("Device name: '%s'\r\n", name);
+
+  // write device name to the GATT database
+  res = gecko_cmd_gatt_server_write_attribute_value(gattdb_device_name, 0, strlen(name), (uint8_t *)name)->result;
+  if (res) {
+    log("gecko_cmd_gatt_server_write_attribute_value() failed, code 0x%x\r\n", res);
+  }
+
+  // show device name on the LCD
+  DI_Print(name, DI_ROW_NAME);
+
+#else
   // create unique device name using the last two bytes of the Bluetooth address
   sprintf(name, "pub node %02x:%02x", pAddr->addr[1], pAddr->addr[0]);
 
@@ -196,6 +188,7 @@ static void set_device_name(bd_addr *pAddr)
 
   // show device name on the LCD
   DI_Print(name, DI_ROW_NAME);
+#endif
 }
 
 /***************************************************************************//**
@@ -242,6 +235,9 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 	  switch (evt_id) {
 
 	    case gecko_evt_system_boot_id:
+
+		  set_alarm_state(0);
+		  set_alarm_deactivate(0);
 
 	      // check pushbutton state at startup. If PB0 is held down then do factory reset
 	      if (GPIO_PinInGet(BSP_BUTTON0_PORT, BSP_BUTTON0_PIN) == 0) {
@@ -291,6 +287,24 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 	        case NODE_CONFIGURED_TIMER:
 	          break;
 
+	        case ALARM_DEACTIVATE_TIMER:
+	        	set_ad_counter(get_ad_counter()-1);
+
+	        	if(get_ad_counter()){
+	        		sprintf(buf, "%d", get_ad_counter());
+	        		DI_Print(buf, DI_ROW_TEMPERATURE);
+				    gecko_cmd_hardware_set_soft_timer(TIMER_MS_2_TIMERTICK(1000),
+	    		                                        ALARM_DEACTIVATE_TIMER,
+	    		                                        SINGLE_SHOT);
+	        	}
+	        	else{
+					set_alarm_deactivate(0);
+					log("Alarm re-activated\n\r");
+					DI_Print("Alarm Not Active", DI_ROW_LIGHTNESS);
+					DI_Print("" , DI_ROW_TEMPERATURE);
+	        	}
+	        	break;
+
 	        default:
 	          break;
 	      }
@@ -303,11 +317,22 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 
 	      errorcode_t     result;
 
-	      // Initialize generic client models
-	      result = gecko_cmd_mesh_generic_client_init()->result;
-	      if (result) {
-	          log("gecko_cmd_mesh_generic_client_init failed, code 0x%x\r\n", result);
+	      if(DeviceUsesClientModel()){
+	          result = gecko_cmd_mesh_generic_client_init()->result;
+	          if (result) {
+	              log("gecko_cmd_mesh_generic_client_init failed, code 0x%x\r\n", result);
+	          }
 	      }
+	      if(DeviceUsesServerModel()){
+	          result = gecko_cmd_mesh_generic_server_init()->result;
+	          if (result) {
+	              log("gecko_cmd_mesh_generic_client_init failed, code 0x%x\r\n", result);
+	          }
+
+
+	      }
+	      // Initialize generic client models
+
 
 	      struct gecko_msg_mesh_node_initialized_evt_t *pData = (struct gecko_msg_mesh_node_initialized_evt_t *)&(pEvt->data);
 
@@ -322,7 +347,7 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 	        node_init();
 
 	        DI_Print("provisioned", DI_ROW_STATUS);
-
+	        DI_Print("Alarm Not Active", DI_ROW_LIGHTNESS);
 	      } else {
 
 	        log("node is unprovisioned\r\n");
@@ -333,20 +358,37 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 	        gecko_cmd_mesh_node_start_unprov_beaconing(PB_ADV | PB_GATT);
 	      }
 
+
 	      break;
 
 
 	    case gecko_evt_system_external_signal_id:
 	    {
 
-	    	// edit #2:
-	    	// for each PB0 event (press and release) call change_switch_position()
-	    	// with the appropriate parameter. change_switch_position() is defined in
-	    	// node.c
+	    	int event = pEvt->data.evt_system_external_signal.extsignals;
+	    	if(event == EXT_SIGNAL_PB0_PRESS){
+	    		sprintf(buf, "PB0 Pressed\n\r");
+	    		log(buf);
+	    		if(get_alarm_state()){
+	    			set_alarm_state(0) ;
+	    			DI_Print("Alarm Not Active", DI_ROW_LIGHTNESS);
+	    		}
+	    		else if(!get_alarm_deactivate()){
+	    			set_alarm_deactivate(1);
+	    			DI_Print("Alarm Deactivated", DI_ROW_LIGHTNESS);
+	    			set_ad_counter(DEACTIVATE_TIME_S);
+				    gecko_cmd_hardware_set_soft_timer(TIMER_MS_2_TIMERTICK(1000),
+	    		                                        ALARM_DEACTIVATE_TIMER,
+	    		                                        SINGLE_SHOT);
+				    sprintf(buf, "%d", DEACTIVATE_TIME_S);
+				    DI_Print(buf,  DI_ROW_TEMPERATURE);
+	    		}
 
-
-
-
+	    	}
+	    	if(event == EXT_SIGNAL_PB0_RELEASE){
+	    		sprintf(buf, "PB0 Released\n\r");
+	    		log(buf);
+	    	}
 
 
 	    }
@@ -480,14 +522,24 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 	      break;
 
 
-
+	    case gecko_evt_mesh_generic_server_client_request_id:
+	    	log("Server Client Request\n\r");
+	    	mesh_lib_generic_server_event_handler(pEvt);
+	    	break;
+	    case gecko_evt_mesh_generic_server_state_changed_id:
+	    	log("Server State Changed\n\r");
+	    	mesh_lib_generic_server_event_handler(pEvt);
+	    	break;
+	    case gecko_evt_mesh_generic_server_state_recall_id:
+	    	log("Server State Recall\n\r");
+	    	mesh_lib_generic_server_event_handler(pEvt);
+	    	break;
 
 
 	    default:
 	      //log("unhandled evt: %8.8x class %2.2x method %2.2x\r\n", evt_id, (evt_id >> 16) & 0xFF, (evt_id >> 24) & 0xFF);
 	      break;
 	  }
-
 #endif //FRIEND_NODE
 
 #if LIGHT_SENSOR

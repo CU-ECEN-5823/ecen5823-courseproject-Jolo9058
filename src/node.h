@@ -33,6 +33,7 @@
 
 #include <stdint.h>
 #include "native_gecko.h"
+#include "display_interface.h"
 
 
 /*******************************************************************************

@@ -33,6 +33,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "node.h"
+
 /* Bluetooth stack headers */
 #include "native_gecko.h"
 #include "mesh_generic_model_capi_types.h"
@@ -40,9 +42,15 @@
 #include "mesh_lib.h"
 #include "board_features.h"
 
+#include "ble_mesh_device_type.h"
 /* Timer definitions */
 #include "app_timer.h"
-
+#include "app.h"
+#include "alarm.h"
+//// Flag for use on the friend node, indicating that an alarm state is in progress
+//extern uint16 alarm_state;
+//// Flag for use on friend node, indicating that alarms are deactivated
+//extern uint16 alarm_deactivate;
 
 
 #ifdef ENABLE_LOGGING
@@ -68,6 +76,39 @@ static uint8_t onoff_request_count;
 static uint8_t onoff_trid = 0;
 
 
+static void onoff_request(uint16_t model_id,
+                          uint16_t element_index,
+                          uint16_t client_addr,
+                          uint16_t server_addr,
+                          uint16_t appkey_index,
+                          const struct mesh_generic_request *request,
+                          uint32_t transition_ms,
+                          uint16_t delay_ms,
+                          uint8_t request_flags)
+{
+  log("ON/OFF request: requested state=<%s>, transition=%lu, delay=%u\r\n",
+      request->on_off ? "ON" : "OFF", transition_ms, delay_ms);
+
+  if (switch_pos == request->on_off) {
+    log("Request for current state received; no op\r\n");
+  } else {
+    log("Turning alarm <%s>\r\n", request->on_off ? "ON" : "OFF");
+
+      switch_pos = request->on_off;
+      if(switch_pos && !get_alarm_deactivate()){
+    	  set_alarm_state(1);
+    	  DI_Print("Alarm Active!", DI_ROW_LIGHTNESS);
+      }
+      else{
+    	  set_alarm_state(0);
+    	  if(!get_alarm_deactivate()) DI_Print("Alarm Not Active", DI_ROW_LIGHTNESS);
+      }
+    }
+}
+
+
+
+
 /*******************************************************************************
  * node initialization.
  * This is called at each boot if provisioning is already done.
@@ -75,8 +116,26 @@ static uint8_t onoff_trid = 0;
  ******************************************************************************/
 void node_init(void)
 {
-  // Initialize mesh lib, up to 8 models
-  mesh_lib_init(malloc, free, 8);
+
+
+
+  if(DeviceIsOnOffPublisher()){
+	  // Initialize mesh lib, up to 8 models
+	  mesh_lib_init(malloc, free, 8);
+  }
+  if(DeviceIsOnOffSubscriber()){
+
+	  mesh_lib_init(malloc,free,9);
+	  mesh_lib_generic_server_register_handler(MESH_GENERIC_ON_OFF_SERVER_MODEL_ID,
+			                                           0,
+			                                           onoff_request,
+			                                           NULL,
+			                                           NULL);
+//	  mesh_lib_generic_server_update();
+//	  mesh_lib_generic_server_publish();
+  }
+
+
 }
 
 /***************************************************************************//**
@@ -204,5 +263,7 @@ void handle_retrans_timer_evt(struct gecko_cmd_packet *pEvt)
   }
 
 } // handle_retrans_timer_evt()
+
+
 
 

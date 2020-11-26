@@ -86,7 +86,11 @@ typedef enum {
   /** Node configuration timer.
    *  This is a single-shot timer used for initialize LPN after node
    *  configuration is done. */
-  NODE_CONFIGURED_TIMER
+  NODE_CONFIGURED_TIMER,
+  /** Alarm deactivation timer.
+   *  This is a single-shot timer used to track time that alarms
+   *  are deactivated. */
+  ALARM_DEACTIVATE_TIMER
 } appTimer_t;
 
 /** @} (end addtogroup app) */
