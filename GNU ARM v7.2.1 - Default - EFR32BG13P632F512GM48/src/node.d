@@ -88,6 +88,7 @@ src/node.o: ../src/node.c \
  C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\platform\emlib\inc/em_cmu.h \
  C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\platform\emlib\inc/em_gpio.h \
  C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\platform\emlib\inc/em_common.h \
+ C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058/src/ble_mesh_device_type.h \
  C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058/gatt_db.h \
  C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\protocol\bluetooth\bt_mesh\inc\common/bg_gattdb_def.h \
  C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\protocol\bluetooth\ble_stack\inc\soc/coexistence-ble.h \
@@ -270,6 +271,8 @@ C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\pl
 C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\platform\emlib\inc/em_gpio.h:
 
 C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\platform\emlib\inc/em_common.h:
+
+C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058/src/ble_mesh_device_type.h:
 
 C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058/gatt_db.h:
 

@@ -127,7 +127,7 @@ void node_init(void)
 
 	  uint16_t res;
 
-	  mesh_lib_init(malloc,free,9);
+	  mesh_lib_init(malloc,free,10);
 
 	  //Initialize Friend functionality
 	  log("Friend mode initialization\r\n");
