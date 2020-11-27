@@ -85,6 +85,11 @@ static inline bool DeviceIsOnOffPublisher() { return false; }
 static inline bool DeviceIsOnOffSubscriber() { return true; }
 #else
 static inline bool DeviceIsOnOffSubscriber() { return false; }
+
+
 #endif
+
+
+#define STORAGE_KEY 0x10
 
 #endif /* SRC_BLE_MESH_DEVICE_TYPE_H_ */

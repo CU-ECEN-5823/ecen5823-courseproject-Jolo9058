@@ -61,7 +61,7 @@ static uint8_t conn_handle = 0xFF;
 /// Flag for indicating that provisioning procedure is finished
 static uint8_t provisioning_finished = 0;
 
-
+extern uint8_t storage_val[1];
 /*******************************************************************************
  * Function prototypes.
  ******************************************************************************/
@@ -290,7 +290,17 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 	      // check pushbutton state at startup. If PB0 is held down then do factory reset
 	      if (GPIO_PinInGet(BSP_BUTTON0_PORT, BSP_BUTTON0_PIN) == 0) {
 
-	        initiate_factory_reset();
+	    	  initiate_factory_reset();
+
+
+	    	  storage_val[0] = 0;
+			  struct gecko_msg_flash_ps_save_rsp_t * store_result = gecko_cmd_flash_ps_save(STORAGE_KEY, 1, storage_val);
+			  if(store_result->result){
+				  log("Persistent storage store failed. Error code: %x\n\r", store_result->result);
+			  DI_Print("Total Alarms: 0", 8);
+
+		  }
+
 
 	      } else {
 
