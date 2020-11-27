@@ -35,6 +35,7 @@
 #include "retargetserial.h"
 #include <stdio.h>
 #include "em_cmu.h"
+#include "ble_mesh_device_type.h"
 #ifdef ENABLE_LOGGING
 #define log(...) printf(__VA_ARGS__)
 #else
@@ -56,7 +57,7 @@
 #define EXT_SIGNAL_PB1_PRESS             0x04
 #define EXT_SIGNAL_PB1_RELEASE           0x08
 #define EXT_SIGNAL_PIR                   0x16
-
+#define EXT_SIGNAL_NOISE 				 0x32
 
 /***************************************************************************//**
  * Button initialization. Configure pushbuttons PB0, PB1 as inputs.
@@ -69,25 +70,27 @@ void button_init(void);
  ******************************************************************************/
 void enable_button_interrupts(void);
 
-#if LowPowerNode == 1
-#include <stdint.h>
-#define soundPort gpioPortC
-#define soundGate 8
-uint32_t GPIOsound;
-void sound_init(void);
-void enable_sound_interrupts(void);
-void sound_interrupt(void);
-#else if PIR_SENSOR
+#if NOISE_SENSOR == 1
+	#include <stdint.h>
+	#define soundPort gpioPortC
+	#define soundGate 8
+	#define	PIRLED_port gpioPortC   // Pin P5 on the breakout board
+	#define PIRLED_pin  8
+	uint32_t GPIOsound;
+	void sound_init(void);
+	void enable_sound_interrupts(void);
+	void sound_interrupt(void);
 
-#define	PIRLED_port gpioPortC   // Pin P5 on the breakout board
-#define PIRLED_pin  8
-#define	PIRLED_port1 gpioPortC   // Pin P5 on the breakout board
-#define PIRLED_pin1  9
-void gpioLedPIRSetOn(void);
-void gpioLedPIRSetOff(void);
-void gpioInit(void);
-void pir_init(void);
-void pir_interrupt(void);
+#elif PIR_SENSOR == 1
+	#define	PIRLED_port gpioPortC   // Pin P5 on the breakout board
+	#define PIRLED_pin  8
+	#define	PIRLED_port1 gpioPortC   // Pin P5 on the breakout board
+	#define PIRLED_pin1  9
+	void gpioLedPIRSetOn(void);
+	void gpioLedPIRSetOff(void);
+	void gpioInit(void);
+	void pir_init(void);
+	void pir_interrupt(void);
 #endif
 
 #endif /* BUTTONS_H */

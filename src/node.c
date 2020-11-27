@@ -230,9 +230,28 @@ void change_switch_position(uint8_t position)
                                       REPEATING);
   }
 
+#elif NOISE_SENSOR
+  switch_pos = position;
+
+  // Turns light ON or OFF, using Generic OnOff model
+  log("Noise sensor ");
+  if (switch_pos) {
+    log("SOUND Detected\r\n");
+  }
+
+  onoff_request_count = 3; // Request is sent 3 times to improve reliability
+
+  send_onoff_request(0);  // Send the first request
+
+  // If there are more requests to send, start a repeating soft timer
+  // to trigger retransmission of the request after 50 ms delay
+  if (onoff_request_count > 0) {
+    gecko_cmd_hardware_set_soft_timer(TIMER_MS_2_TIMERTICK(50),
+                                      RETRANS_ONOFF_TIMER,
+                                      REPEATING);
+  }
+
 #endif
-
-
 } // change_switch_position()
 
 

@@ -108,11 +108,15 @@ void appMain(const gecko_configuration_t *pConfig)
 
   // Initialize debug prints and display interface
   RETARGET_SerialInit();
+#if !PIR_SENSOR
+  DI_Init();
+#endif
 
 
 #if NOISE_SENSOR
   sound_init();
-  enable_sound_interrupts();
+  //enable_sound_interrupts();
+
 #endif
 #if PIR_SENSOR
   gpioInit();
@@ -124,7 +128,10 @@ void appMain(const gecko_configuration_t *pConfig)
   // for button & LED. Initialization is done in this order so that default
   // configuration will be "button" for those radio boards with shared pins.
   button_init();
+
+#if PIR_SENSOR
   DI_Init();
+#endif
 
   while (1) {
     // Event pointer for handling events
@@ -179,6 +186,10 @@ static void set_device_name(bd_addr *pAddr)
   // create unique device name using the last two bytes of the Bluetooth address
 #if PIR_SENSOR
   sprintf(name, "PIR node %02x:%02x", pAddr->addr[1], pAddr->addr[0]);
+#endif
+
+#if NOISE_SENSOR
+  sprintf(name, "SOUND node %02x:%02x", pAddr->addr[1], pAddr->addr[0]);
 #endif
 
   log("Device name: '%s'\r\n", name);
@@ -888,12 +899,13 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 
 	        _my_address = pData->address;
 
-	        enable_button_interrupts();
+	       // enable_button_interrupts();
 
 	        provisioning_finished = 1;
 	        node_init();
 
 	        DI_Print("provisioned", DI_ROW_STATUS);
+	        enable_sound_interrupts();
 
 	      } else {
 
@@ -915,11 +927,12 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 	    	// for each PB0 event (press and release) call change_switch_position()
 	    	// with the appropriate parameter. change_switch_position() is defined in
 	    	// node.c
-
-
-
-
-
+	    	if ((pEvt->data.evt_system_external_signal.extsignals & EXT_SIGNAL_NOISE) == 0x32)
+	    	{
+	    		   log("NOISE DETECTED");
+	    		   log("GPIOsound in ext = %lu\n\r",GPIOsound);
+	    		   change_switch_position(ON);
+	    	}
 
 	    }
 
@@ -943,8 +956,8 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 
 	      DI_Print("provisioned", DI_ROW_STATUS);
 
-	      enable_button_interrupts();
-
+	      //enable_button_interrupts();
+	      enable_sound_interrupts();
 	      break;
 
 
