@@ -12,9 +12,9 @@
 
 
 
-#define FRIEND_NODE 1
+#define FRIEND_NODE 0
 #define LIGHT_SENSOR 0
-#define NOISE_SENSOR 0
+#define NOISE_SENSOR 1
 #define PIR_SENSOR 0
 
 

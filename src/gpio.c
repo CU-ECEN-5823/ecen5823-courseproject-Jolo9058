@@ -51,28 +51,35 @@ void button_init(void)
 
 
 
-#if LowPowerNode == 1
+#if NOISE_SENSOR
 void sound_init(void)
 {
   // configure pushbutton PB0 and PB1 as inputs, with pull-up enabled
-  GPIO_PinModeSet(soundPort, soundGate, gpioModeInputPull, 1);
+	//GPIO_DriveStrengthSet(soundPort, gpioDriveStrengthWeakAlternateStrong);
+  GPIO_PinModeSet(soundPort, soundGate, gpioModeInputPull, 1);						//now
+	//GPIO_PinModeSet(PIRLED_port, PIRLED_pin, gpioModeInput, 1);
+	//GPIO_PinModeSet(soundPort, soundGate, gpioModeInputPullFilter , 1);
 //  GPIO_PinModeSet(BSP_BUTTON1_PORT, BSP_BUTTON1_PIN, gpioModeInputPull, 1);
 }
 
 
+
 void sound_interrupt(void)
 {
-	log("In sound interrupt\n\r");
-	GPIOsound = GPIO_PinInGet(soundPort,soundGate);
-			if(GPIOsound == 0)
+	//log("In sound interrupt\n\r");
+	GPIOsound = GPIO_PinInGet(soundPort,soundGate);						//now
+	//GPIOsound = GPIO_PinInGet(PIRLED_port,PIRLED_pin);
+			/*if(GPIOsound == 0)
 			{
-				log("Quiet\n\r");
+				//log("Quiet\n\r");
 				//gecko_external_signal(EXT_SIGNAL_PB0_PRESS);
-			}
-			else
+			}*/
+	//log("GPIOsound = %lu\n\r",GPIOsound);
+			if(GPIOsound == 1)
 			{
 				log("Noisy\n\r");
-				//gecko_external_signal(EXT_SIGNAL_PB0_RELEASE);
+				GPIOsound = 0;
+				gecko_external_signal(EXT_SIGNAL_NOISE);
 			}
 }
 #endif
@@ -174,7 +181,7 @@ void enable_button_interrupts(void)
 } // enable_button_interrupts()
 
 
-#if LowPowerNode == 1
+#if NOISE_SENSOR == 1
 void enable_sound_interrupts(void)
 {
 
@@ -202,15 +209,13 @@ void enable_sound_interrupts(void)
   GPIOINT_Init();
 
   /* configure interrupt for PB0 and PB1, both falling and rising edges */
-  GPIO_ExtIntConfig(soundPort, soundGate, soundGate, true, true, true);
+  GPIO_ExtIntConfig(soundPort, soundGate, soundGate, true, true, true);			//now
 
-//  GPIO_ExtIntConfig(BSP_BUTTON1_PORT, BSP_BUTTON1_PIN, BSP_BUTTON1_PIN,
-//                   true, true, true);
-
+  //GPIO_ExtIntConfig(PIRLED_port,PIRLED_pin, PIRLED_pin, true, true, true);
 
   /* register the callback function that is invoked whenS interrupt occurs */
-  GPIOINT_CallbackRegister(soundGate,sound_interrupt);
-//  GPIOINT_CallbackRegister(BSP_BUTTON1_PIN, button_interrupt);
+  GPIOINT_CallbackRegister(soundGate,sound_interrupt);							//now
+  //GPIOINT_CallbackRegister(PIRLED_pin,sound_interrupt);
 
 } // enable_button_interrupts()
 #endif
@@ -218,7 +223,7 @@ void enable_sound_interrupts(void)
  * GPIO initialization. Configure pushbuttons GPIO PC9 as output for external
  * LED indicator
  ******************************************************************************/
-
+#if PIR_SENSOR
 void gpioInit()
 {
 	GPIO_DriveStrengthSet(PIRLED_port1, gpioDriveStrengthWeakAlternateStrong);
@@ -269,10 +274,11 @@ void pir_interrupt()
 		{
 		printf("motion detected \n\r");
 		gpioLedPIRSetOn();
+		gecko_external_signal(EXT_SIGNAL_PIR);       // PIR based external event
 		}
-	// gecko_external_signal(EXT_SIGNAL_PIR);       // PIR based external event for further sprints
-}
 
+}
+#endif
 
 
 
