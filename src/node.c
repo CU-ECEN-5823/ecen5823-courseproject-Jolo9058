@@ -125,7 +125,17 @@ void node_init(void)
   }
   if(DeviceIsOnOffSubscriber()){
 
+	  uint16_t res;
+
 	  mesh_lib_init(malloc,free,9);
+
+	  //Initialize Friend functionality
+	  log("Friend mode initialization\r\n");
+	  res = gecko_cmd_mesh_friend_init()->result;
+	  if (res) {
+	    log("Friend init failed 0x%x\r\n", res);
+	  }
+
 	  mesh_lib_generic_server_register_handler(MESH_GENERIC_ON_OFF_SERVER_MODEL_ID,
 			                                           0,
 			                                           onoff_request,

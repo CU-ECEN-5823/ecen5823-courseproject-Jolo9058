@@ -73,24 +73,58 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt);
  ******************************************************************************/
 static void gecko_bgapi_classes_init(void)
 {
-  gecko_bgapi_class_dfu_init();
-  gecko_bgapi_class_system_init();
-  gecko_bgapi_class_le_gap_init();
-  gecko_bgapi_class_le_connection_init();
-  gecko_bgapi_class_gatt_server_init();
-  gecko_bgapi_class_hardware_init();
-  gecko_bgapi_class_flash_init();
-  gecko_bgapi_class_test_init();
-  gecko_bgapi_class_mesh_node_init();
-  gecko_bgapi_class_mesh_proxy_init();
-  gecko_bgapi_class_mesh_proxy_server_init();
-  gecko_bgapi_class_mesh_generic_client_init();
-  gecko_bgapi_class_mesh_scene_client_init();
-  gecko_bgapi_class_mesh_generic_server_init(); // <-- initialize generic server class
-  //gecko_bgapi_class_mesh_scene_client_init(); // <-- scene server is not present in A10, so not needed.
-                                                //     If you use this code as your starter code for the
-                                                //     course project there may be more class initialization
-                                                //     functions to call.
+
+
+#if FRIEND_NODE
+	  gecko_bgapi_class_dfu_init();
+	  gecko_bgapi_class_system_init();
+	  gecko_bgapi_class_le_gap_init();
+	  gecko_bgapi_class_le_connection_init();
+	  //gecko_bgapi_class_gatt_init();
+	  gecko_bgapi_class_gatt_server_init();
+	  gecko_bgapi_class_hardware_init();
+	  gecko_bgapi_class_flash_init();
+	  gecko_bgapi_class_test_init();
+	  //gecko_bgapi_class_sm_init();
+	  gecko_bgapi_class_mesh_node_init();
+	  //gecko_bgapi_class_mesh_prov_init();
+	  gecko_bgapi_class_mesh_proxy_init();
+	  gecko_bgapi_class_mesh_proxy_server_init();
+	  //gecko_bgapi_class_mesh_proxy_client_init();
+	  //gecko_bgapi_class_mesh_generic_client_init();
+	  gecko_bgapi_class_mesh_generic_server_init();
+	  //gecko_bgapi_class_mesh_vendor_model_init();
+	  //gecko_bgapi_class_mesh_health_client_init();
+	  //gecko_bgapi_class_mesh_health_server_i it();
+	  //gecko_bgapi_class_mesh_test_init();
+	  //gecko_bgapi_class_mesh_lpn_init();
+	  gecko_bgapi_class_mesh_friend_init();
+	  gecko_bgapi_class_mesh_lc_server_init();
+	  gecko_bgapi_class_mesh_lc_setup_server_init();
+	  gecko_bgapi_class_mesh_scene_server_init();
+	  gecko_bgapi_class_mesh_scene_setup_server_init();
+	  gecko_bgapi_class_mesh_time_server_init();
+	  gecko_bgapi_class_mesh_scheduler_server_init();
+#else
+	    gecko_bgapi_class_dfu_init();
+	    gecko_bgapi_class_system_init();
+	    gecko_bgapi_class_le_gap_init();
+	    gecko_bgapi_class_le_connection_init();
+	    gecko_bgapi_class_gatt_server_init();
+	    gecko_bgapi_class_hardware_init();
+	    gecko_bgapi_class_flash_init();
+	    gecko_bgapi_class_test_init();
+	    gecko_bgapi_class_mesh_node_init();
+	    gecko_bgapi_class_mesh_proxy_init();
+	    gecko_bgapi_class_mesh_proxy_server_init();
+	    gecko_bgapi_class_mesh_generic_client_init();
+	    gecko_bgapi_class_mesh_scene_client_init();
+	    gecko_bgapi_class_mesh_generic_server_init(); // <-- initialize generic server class
+	    //gecko_bgapi_class_mesh_scene_client_init(); // <-- scene server is not present in A10, so not needed.
+	                                                  //     If you use this code as your starter code for the
+	                                                  //     course project there may be more class initialization
+	                                                  //     functions to call.
+#endif
 }
 
 /*******************************************************************************
@@ -534,6 +568,16 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 	    	log("Server State Recall\n\r");
 	    	mesh_lib_generic_server_event_handler(pEvt);
 	    	break;
+
+	    case gecko_evt_mesh_friend_friendship_established_id:
+	      log("evt gecko_evt_mesh_friend_friendship_established, lpn_address=%x\r\n", pEvt->data.evt_mesh_friend_friendship_established.lpn_address);
+	      DI_Print("FRIEND", DI_ROW_FRIEND);
+	      break;
+
+	    case gecko_evt_mesh_friend_friendship_terminated_id:
+	      log("evt gecko_evt_mesh_friend_friendship_terminated, reason=%x\r\n", pEvt->data.evt_mesh_friend_friendship_terminated.reason);
+	      DI_Print("NO LPN", DI_ROW_FRIEND);
+	      break;
 
 
 	    default:
