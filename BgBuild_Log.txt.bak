@@ -2,7 +2,7 @@
 //
 //
 
-Executing: bgbuild (/Applications/Simplicity Studio.app/Contents/Eclipse/developer/sdks/blemesh/v1.7/protocol/bluetooth/bin/bgbuild)
+Executing: bgbuild.exe (C:\SiliconLabs\SimplicityStudio\v4\developer\sdks\blemesh\v1.7\protocol\bluetooth\bin\bgbuild.exe)
 Standard output
 ALL OK
 
