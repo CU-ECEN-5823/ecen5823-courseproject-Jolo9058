@@ -1286,6 +1286,10 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 	      break;
 
 
+
+
+
+
 	    case gecko_evt_mesh_node_provisioned_id:
 
 	      provisioning_finished = 1;
