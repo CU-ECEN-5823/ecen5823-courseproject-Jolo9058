@@ -50,7 +50,12 @@
 
 #include "app.h"
 
-
+//////////////////////////////////////////////////
+#include "sleep.h"
+#include "oscillators.h"
+#include "timers.h"
+#include <em_letimer.h>
+//////////////////////////////////////////////////////
 
 
 /* Coex header */
@@ -63,6 +68,22 @@
 #include "retargetserial.h"
 #include <stdio.h>
 
+///////////////////////////////////////////////////
+#define LETIMER_PERIOD_MS 3000
+#define LOWEST_ENERGY_MODE  3   // Options are 0 1 2 3
+
+
+#if LOWEST_ENERGY_MODE == 0 || LOWEST_ENERGY_MODE == 1 || LOWEST_ENERGY_MODE == 2
+	#define my_osc cmuOsc_LFXO              // Enabling LFXO for EM0, EM1, EM2 modes
+	#define my_clock_select cmuSelect_LFXO
+    #define my_clock_div    cmuClkDiv_4     // Clock divide by 4 for getting min time period ~7Sec
+#elif LOWEST_ENERGY_MODE == 3
+	#define my_osc cmuOsc_ULFRCO            // Enabling ULFRCO for EM3 mode
+	#define my_clock_select cmuSelect_ULFRCO
+    #define my_clock_div    cmuClkDiv_1     // For ULFRCO, no need of div
+#endif
+
+////////////////////////////////////////////////////
 
 /***************************************************************************//**
  * Main application code.
@@ -71,5 +92,11 @@
 void appMain(const gecko_configuration_t *pConfig);
 
 int get_alarm_deactivate();
+
+
+
+uint32_t frequency;
+
+
 
 #endif /* APP_H */
