@@ -36,6 +36,7 @@
 #include "display_interface.h"
 
 
+
 /*******************************************************************************
    Public Macros and Definitions
 *******************************************************************************/
@@ -70,7 +71,6 @@ void change_switch_position(uint8_t position);
  *  @param[in] pEvt  Pointer to incoming event.
  ******************************************************************************/
 void handle_retrans_timer_evt(struct gecko_cmd_packet *pEvt);
-
 
 
 #endif /* SWITCH_H */

@@ -76,6 +76,7 @@ static uint8_t onoff_request_count;
 static uint8_t onoff_trid = 0;
 
 
+
 static void onoff_request(uint16_t model_id,
                           uint16_t element_index,
                           uint16_t client_addr,
@@ -164,6 +165,7 @@ void node_init(void)
  ******************************************************************************/
 static void send_onoff_request(uint8_t retrans)
 {
+	log("IN send on off request\n\r");
   struct mesh_generic_request req;
   const uint32_t transtime = 0; // using zero transition time by default
 
@@ -189,6 +191,9 @@ static void send_onoff_request(uint8_t retrans)
                                                   delay,
                                                   NO_FLAGS   // flags
                                                   );
+
+
+
 
   if (resp) {
     log("gecko_cmd_mesh_generic_client_publish failed, code 0x%x\r\n", resp);
@@ -240,11 +245,11 @@ void change_switch_position(uint8_t position)
                                       REPEATING);
   }
 
-#elif NOISE_SENSOR
+#elif NOISE_SENSOR == 1
   switch_pos = position;
 
   // Turns light ON or OFF, using Generic OnOff model
-  log("Noise sensor ");
+  //log("Noise sensor \n\r");
   if (switch_pos) {
     log("SOUND Detected\r\n");
   }
@@ -263,10 +268,6 @@ void change_switch_position(uint8_t position)
 
 #endif
 } // change_switch_position()
-
-
-
-
 
 /*******************************************************************************
  *  Handling of message retransmission timer events.
@@ -293,7 +294,5 @@ void handle_retrans_timer_evt(struct gecko_cmd_packet *pEvt)
   }
 
 } // handle_retrans_timer_evt()
-
-
 
 

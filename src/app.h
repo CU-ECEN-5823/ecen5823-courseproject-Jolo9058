@@ -42,8 +42,8 @@
 #include <src/node.h>
 #include "native_gecko.h"
 #include "gatt_db.h"
-
-
+#include "mesh_proxy.h"
+#include "lpn.h"
 
 /* Timer definitions */
 #include "app_timer.h"

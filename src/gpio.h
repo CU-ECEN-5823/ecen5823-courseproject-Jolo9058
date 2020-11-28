@@ -72,10 +72,10 @@ void enable_button_interrupts(void);
 
 #if NOISE_SENSOR == 1
 	#include <stdint.h>
-	#define soundPort gpioPortC
-	#define soundGate 8
-	#define	PIRLED_port gpioPortC   // Pin P5 on the breakout board
-	#define PIRLED_pin  8
+	#define soundPort gpioPortA
+	#define soundGate 3
+	#define	PIRLED_port gpioPortA   // Pin P5 on the breakout board
+	#define PIRLED_pin  3
 	uint32_t GPIOsound;
 	void sound_init(void);
 	void enable_sound_interrupts(void);
