@@ -78,7 +78,7 @@ void sound_interrupt(void)
 			if(GPIOsound == 1)
 			{
 				log("Noisy\n\r");
-				GPIOsound = 0;
+				//GPIOsound = 0;
 				gecko_external_signal(EXT_SIGNAL_NOISE);
 			}
 }
