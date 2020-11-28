@@ -1271,8 +1271,12 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 	    	if ((pEvt->data.evt_system_external_signal.extsignals & EXT_SIGNAL_PIR) == 0x16)
 	    	    			 {
 	    	    		log("PIR external event_ #1");
+	    	    		gpioLedPIRSetOn();
 	    	    		change_switch_position(ON);
 	    	    			 }
+
+
+
 	    }
 
 	    break;
@@ -1284,10 +1288,6 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 	      DI_Print("provisioning...", DI_ROW_STATUS);
 
 	      break;
-
-
-
-
 
 
 	    case gecko_evt_mesh_node_provisioned_id:
