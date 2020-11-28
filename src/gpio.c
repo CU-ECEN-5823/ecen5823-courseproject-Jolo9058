@@ -273,7 +273,7 @@ void pir_interrupt()
 	if(GPIO_PinInGet(PIRLED_port,PIRLED_pin) == 1)
 		{
 		printf("motion detected \n\r");
-		gpioLedPIRSetOn();
+
 		gecko_external_signal(EXT_SIGNAL_PIR);       // PIR based external event
 		}
 
