@@ -73,4 +73,8 @@ void change_switch_position(uint8_t position);
 void handle_retrans_timer_evt(struct gecko_cmd_packet *pEvt);
 
 
+
+
+static uint8_t storage_val[1];
+
 #endif /* SWITCH_H */
