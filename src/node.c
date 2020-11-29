@@ -108,9 +108,9 @@ static void onoff_request(uint16_t model_id,
   log("ON/OFF request: requested state=<%s>, transition=%lu, delay=%u\r\n",
       request->on_off ? "ON" : "OFF", transition_ms, delay_ms);
 
-//  if (!switch_pos && !request->on_off && ) {
-//    log("Request for current state received; no op\r\n");
-//  } else {
+  if (switch_pos == request->on_off) {
+    log("Request for current state received; no op\r\n");
+  } else {
     log("Turning alarm <%s>\r\n", request->on_off ? "ON" : "OFF");
 
       switch_pos = request->on_off;
@@ -140,7 +140,7 @@ static void onoff_request(uint16_t model_id,
     	  set_alarm_state(0);
     	  if(!get_alarm_deactivate()) DI_Print("Alarm Not Active", DI_ROW_LIGHTNESS);
       }
-   // }
+    }
 }
 
 
