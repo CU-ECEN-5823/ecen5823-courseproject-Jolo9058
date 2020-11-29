@@ -21,10 +21,10 @@
           "Generic OnOff Client",
           "0x1000",
           "Generic OnOff Server",
-          "0x1009",
-          "Generic Power Level Server",
-          "0x100B",
-          "Generic Power Level Client"]
+          "0x1002",
+          "Generic Level Server",
+          "0x1003",
+          "Generic Level Client"]
         ,
         "Vendor Models": [
           ]

@@ -45,7 +45,7 @@ void button_init(void)
 {
   // configure pushbutton PB0 and PB1 as inputs, with pull-up enabled
   GPIO_PinModeSet(BSP_BUTTON0_PORT, BSP_BUTTON0_PIN, gpioModeInputPull, 1);
-//  GPIO_PinModeSet(BSP_BUTTON1_PORT, BSP_BUTTON1_PIN, gpioModeInputPull, 1);
+  GPIO_PinModeSet(BSP_BUTTON1_PORT, BSP_BUTTON1_PIN, gpioModeInputPull, 1);
 
 }
 
@@ -119,6 +119,16 @@ void button_interrupt(uint8_t pin)
 		}
 	}
 
+	if(pin == BSP_BUTTON1_PIN){ //PB0 event
+		int pin_state = !GPIO_PinInGet(BSP_BUTTON1_PORT, BSP_BUTTON1_PIN);
+		if(pin_state){ //pressed
+			gecko_external_signal(EXT_SIGNAL_PB1_PRESS);
+		}
+		else{ //released
+			gecko_external_signal(EXT_SIGNAL_PB1_RELEASE);
+		}
+	}
+
 
 
 
@@ -170,13 +180,13 @@ void enable_button_interrupts(void)
   GPIO_ExtIntConfig(BSP_BUTTON0_PORT, BSP_BUTTON0_PIN, BSP_BUTTON0_PIN,
                     true, true, true);
 
-//  GPIO_ExtIntConfig(BSP_BUTTON1_PORT, BSP_BUTTON1_PIN, BSP_BUTTON1_PIN,
-//                   true, true, true);
+  GPIO_ExtIntConfig(BSP_BUTTON1_PORT, BSP_BUTTON1_PIN, BSP_BUTTON1_PIN,
+                   true, true, true);
 
 
   /* register the callback function that is invoked when interrupt occurs */
   GPIOINT_CallbackRegister(BSP_BUTTON0_PIN, button_interrupt);
-//  GPIOINT_CallbackRegister(BSP_BUTTON1_PIN, button_interrupt);
+  GPIOINT_CallbackRegister(BSP_BUTTON1_PIN, button_interrupt);
 
 } // enable_button_interrupts()
 

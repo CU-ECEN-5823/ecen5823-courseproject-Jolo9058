@@ -433,7 +433,10 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 	      if(DeviceUsesServerModel()){
 	          result = gecko_cmd_mesh_generic_server_init()->result;
 	          if (result) {
-	              log("gecko_cmd_mesh_generic_client_init failed, code 0x%x\r\n", result);
+	              log("gecko_cmd_mesh_generic_server_init failed, code 0x%x\r\n", result);
+	          }
+	          else{
+	        	  log("mesh server init succeeded\n\r");
 	          }
 
 
@@ -494,6 +497,10 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 	    	}
 	    	if(event == EXT_SIGNAL_PB0_RELEASE){
 	    		sprintf(buf, "PB0 Released\n\r");
+	    		log(buf);
+	    	}
+	    	if(event == EXT_SIGNAL_PB1_PRESS){
+	    		sprintf(buf, "PB1 Pressed\n\r");
 	    		log(buf);
 	    	}
 

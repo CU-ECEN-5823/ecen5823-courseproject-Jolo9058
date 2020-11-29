@@ -79,7 +79,21 @@ char buf[30]; // for sprintf, see below
 
 
 
-
+static void level_request(uint16_t model_id,
+                          uint16_t element_index,
+                          uint16_t client_addr,
+                          uint16_t server_addr,
+                          uint16_t appkey_index,
+                          const struct mesh_generic_request *request,
+                          uint32_t transition_ms,
+                          uint16_t delay_ms,
+                          uint8_t request_flags)
+{
+	  log("LEVEL request: requested state=<%d>, transition=%lu, delay=%u\r\n",
+	      request->level, transition_ms, delay_ms);
+	  sprintf(buf, "Temp: %d", request->level);
+	  DI_Print(buf, 6);
+}
 
 static void onoff_request(uint16_t model_id,
                           uint16_t element_index,
@@ -159,13 +173,26 @@ void node_init(void)
 	    log("Friend init failed 0x%x\r\n", res);
 	  }
 
+	  uint8_t pwr_lvl[1];
+	  pwr_lvl[0] = 50;
+
 	  mesh_lib_generic_server_register_handler(MESH_GENERIC_ON_OFF_SERVER_MODEL_ID,
 			                                           0,
 			                                           onoff_request,
 			                                           NULL,
 			                                           NULL);
-//	  mesh_lib_generic_server_update();
-//	  mesh_lib_generic_server_publish();
+	  mesh_lib_generic_server_register_handler(MESH_GENERIC_LEVEL_SERVER_MODEL_ID,
+			                                           0,
+			                                           level_request,
+			                                           NULL,
+			                                           NULL);
+
+
+//	  struct gecko_msg_mesh_generic_server_init_power_level_rsp_t * power_init_resp = gecko_cmd_mesh_generic_server_init_power_level();
+//	  if(power_init_resp->result){
+//		  sprintf(buf, "Power Level Init failed: %x\n\r", power_init_resp->result);
+//		  log(buf);
+//	  }
   }
 
 
