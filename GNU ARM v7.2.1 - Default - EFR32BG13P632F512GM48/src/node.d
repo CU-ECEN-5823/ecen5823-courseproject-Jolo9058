@@ -92,6 +92,8 @@ src/node.o: ../src/node.c \
  C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058/gatt_db.h \
  C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\protocol\bluetooth\bt_mesh\inc\common/bg_gattdb_def.h \
  ../src/mesh_proxy.h ../src/lpn.h \
+ C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\platform\emdrv\sleep\inc/sleep.h \
+ ../src/oscillators.h ../src/timers.h \
  C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\protocol\bluetooth\ble_stack\inc\soc/coexistence-ble.h \
  ../src/alarm.h
 
@@ -282,6 +284,12 @@ C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\pr
 ../src/mesh_proxy.h:
 
 ../src/lpn.h:
+
+C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\platform\emdrv\sleep\inc/sleep.h:
+
+../src/oscillators.h:
+
+../src/timers.h:
 
 C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\protocol\bluetooth\ble_stack\inc\soc/coexistence-ble.h:
 

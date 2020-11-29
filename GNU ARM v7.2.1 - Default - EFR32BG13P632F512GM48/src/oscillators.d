@@ -1,10 +1,14 @@
-main.o: ../main.c ../init_mcu.h ../board_features.h \
- ../ble-configuration.h ../init_board.h ../init_app.h ../gatt_db.h \
+src/oscillators.o: ../src/oscillators.c ../src/app.h \
+ C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\protocol\bluetooth\bt_mesh\inc\common/gecko_configuration.h \
  C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\protocol\bluetooth\bt_mesh\inc\common/bg_gattdb_def.h \
  C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\protocol\bluetooth\bt_mesh\inc\common/bg_types.h \
- C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\protocol\bluetooth\bt_mesh\inc\common/mesh_sizes.h \
- C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058/mesh_app_memory_config.h \
- ../hal-config.h \
+ C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058/src/ble_mesh_device_type.h \
+ C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058/src/gpio.h \
+ C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\hardware\kit\common\drivers/retargetserial.h \
+ C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\hardware\kit\common\halconfig/retargetserialhalconfig.h \
+ C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058/hal-config.h \
+ C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058/board_features.h \
+ C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058/ble-configuration.h \
  C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\hardware\kit\EFR32BG13_BRD4104A\config/hal-config-board.h \
  C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\platform\Device\SiliconLabs\EFR32BG13P\Include/em_device.h \
  C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\platform\Device\SiliconLabs\EFR32BG13P\Include/efr32bg13p632f512gm48.h \
@@ -65,14 +69,7 @@ main.o: ../main.c ../init_mcu.h ../board_features.h \
  C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\platform\emlib\inc/em_gpio.h \
  C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\platform\emlib\inc/em_bus.h \
  C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\platform\emlib\inc/em_assert.h \
- ../hal-config-app-common.h ../src/app.h \
- C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\protocol\bluetooth\bt_mesh\inc\common/gecko_configuration.h \
- C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\protocol\bluetooth\bt_mesh\inc\common/bg_gattdb_def.h \
- C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058/src/ble_mesh_device_type.h \
- C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058/src/gpio.h \
- C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\hardware\kit\common\drivers/retargetserial.h \
- C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\hardware\kit\common\halconfig/retargetserialhalconfig.h \
- C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058/hal-config.h \
+ C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058/hal-config-app-common.h \
  C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\platform\emlib\inc/em_cmu.h \
  C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\platform\emlib\inc/em_gpio.h \
  C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\platform\emlib\inc/em_common.h \
@@ -82,36 +79,37 @@ main.o: ../main.c ../init_mcu.h ../board_features.h \
  C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\protocol\bluetooth\bt_mesh\inc\common/bg_types.h \
  C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\protocol\bluetooth\bt_mesh\inc\common/bg_errorcodes.h \
  C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058/display_interface.h \
- C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058/board_features.h \
  C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058/lcd_driver.h \
  C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058/hal-config.h \
  C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058/gatt_db.h \
+ C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\protocol\bluetooth\bt_mesh\inc\common/bg_gattdb_def.h \
  ../src/mesh_proxy.h ../src/lpn.h \
  C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058/app_timer.h \
- ../src/app.h \
+ C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\platform\emdrv\sleep\inc/sleep.h \
+ ../src/oscillators.h ../src/timers.h \
  C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\protocol\bluetooth\ble_stack\inc\soc/coexistence-ble.h
 
-../init_mcu.h:
+../src/app.h:
 
-../board_features.h:
-
-../ble-configuration.h:
-
-../init_board.h:
-
-../init_app.h:
-
-../gatt_db.h:
+C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\protocol\bluetooth\bt_mesh\inc\common/gecko_configuration.h:
 
 C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\protocol\bluetooth\bt_mesh\inc\common/bg_gattdb_def.h:
 
 C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\protocol\bluetooth\bt_mesh\inc\common/bg_types.h:
 
-C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\protocol\bluetooth\bt_mesh\inc\common/mesh_sizes.h:
+C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058/src/ble_mesh_device_type.h:
 
-C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058/mesh_app_memory_config.h:
+C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058/src/gpio.h:
 
-../hal-config.h:
+C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\hardware\kit\common\drivers/retargetserial.h:
+
+C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\hardware\kit\common\halconfig/retargetserialhalconfig.h:
+
+C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058/hal-config.h:
+
+C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058/board_features.h:
+
+C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058/ble-configuration.h:
 
 C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\hardware\kit\EFR32BG13_BRD4104A\config/hal-config-board.h:
 
@@ -233,23 +231,7 @@ C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\pl
 
 C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\platform\emlib\inc/em_assert.h:
 
-../hal-config-app-common.h:
-
-../src/app.h:
-
-C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\protocol\bluetooth\bt_mesh\inc\common/gecko_configuration.h:
-
-C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\protocol\bluetooth\bt_mesh\inc\common/bg_gattdb_def.h:
-
-C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058/src/ble_mesh_device_type.h:
-
-C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058/src/gpio.h:
-
-C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\hardware\kit\common\drivers/retargetserial.h:
-
-C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\hardware\kit\common\halconfig/retargetserialhalconfig.h:
-
-C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058/hal-config.h:
+C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058/hal-config-app-common.h:
 
 C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\platform\emlib\inc/em_cmu.h:
 
@@ -269,13 +251,13 @@ C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\pr
 
 C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058/display_interface.h:
 
-C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058/board_features.h:
-
 C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058/lcd_driver.h:
 
 C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058/hal-config.h:
 
 C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058/gatt_db.h:
+
+C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\protocol\bluetooth\bt_mesh\inc\common/bg_gattdb_def.h:
 
 ../src/mesh_proxy.h:
 
@@ -283,6 +265,10 @@ C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058/ga
 
 C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058/app_timer.h:
 
-../src/app.h:
+C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\platform\emdrv\sleep\inc/sleep.h:
+
+../src/oscillators.h:
+
+../src/timers.h:
 
 C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\protocol\bluetooth\ble_stack\inc\soc/coexistence-ble.h:
