@@ -75,6 +75,15 @@ static uint8_t onoff_request_count;
 /// on/off transaction identifier
 static uint8_t onoff_trid = 0;
 
+//for level model
+uint8_t level_trid = 0;
+uint16_t my_delay_ms = 100;
+uint16_t my_model_id = 0x1003;
+uint16_t my_element_index = 0;
+uint8_t my_request_flags =0;
+uint32_t my_transition_ms =0;
+static uint8_t level_request_count;
+static uint16_t temp_val;
 char buf[30]; // for sprintf, see below
 
 
@@ -198,6 +207,36 @@ void node_init(void)
 
 }
 
+
+void send_level_request(uint16_t temp_data, uint16_t delay)
+{
+	uint16_t retrans = 0;
+	//struct mesh_generic_state req_level;
+	struct mesh_generic_request req_level;
+	//req_level.kind = mesh_generic_state_level;
+	req_level.kind = mesh_generic_request_level;
+	req_level.level = temp_data;
+
+
+	uint16_t resp_lr = mesh_lib_generic_client_publish(
+					MESH_GENERIC_LEVEL_CLIENT_MODEL_ID,
+					0,
+					level_trid,
+					&req_level,
+					0,     // transition
+					0,
+					0     // flags
+			);
+	level_trid++;
+	if (resp_lr) {
+	    log("gecko_cmd_mesh_generic_client_publish for level failed, code 0x%x\r\n", resp_lr);
+	  } else {
+			  log("off request sent, trid = %u\r\n, delay = %u\r\n", level_trid,delay);
+		  }
+
+}
+
+
 /***************************************************************************//**
  * This function publishes one generic on/off request to change the state
  * of PB0 in the group. Global variable switch_pos holds the latest
@@ -212,9 +251,11 @@ void node_init(void)
  *       button press and release to improve reliability.
  *       The transaction ID is not incremented in case of a retransmission.
  ******************************************************************************/
+
 static void send_onoff_request(uint8_t retrans)
 {
 	log("IN send on off request\n\r");
+
   struct mesh_generic_request req;
   const uint32_t transtime = 0; // using zero transition time by default
 
@@ -317,6 +358,25 @@ void change_switch_position(uint8_t position)
 
 #endif
 } // change_switch_position()
+
+#if TEMP_SENSOR
+void send_temperature(uint16_t temp_data)
+{
+	log("temperature level %d \r\n",temp_data);
+
+	  level_request_count = 3; // Request is send 3 times to improve reliability
+
+	  //send_level_request(0);  //Send the first request
+
+	  // If there are more requests to send, start a repeating soft timer
+	  // to trigger retransmission of the request after 50 ms delay
+	  if (level_request_count > 0) {
+	    gecko_cmd_hardware_set_soft_timer(TIMER_MS_2_TIMERTICK(50),
+	                                      RETRANS_CTL_TIMER,
+	                                      REPEATING);
+	  }
+}
+#endif
 
 /*******************************************************************************
  *  Handling of message retransmission timer events.

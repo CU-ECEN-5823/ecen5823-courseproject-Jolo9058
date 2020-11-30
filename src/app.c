@@ -61,6 +61,13 @@ static uint8_t conn_handle = 0xFF;
 /// Flag for indicating that provisioning procedure is finished
 static uint8_t provisioning_finished = 0;
 
+uint16_t a1 = 78, d1 = 0;
+
+
+#if TEMP_SENSOR
+uint32_t selectedFREQ;
+#endif
+
 extern uint8_t storage_val[1];
 /*******************************************************************************
  * Function prototypes.
@@ -106,53 +113,7 @@ static void gecko_bgapi_classes_init(void)
 	  gecko_bgapi_class_mesh_time_server_init();
 	  gecko_bgapi_class_mesh_scheduler_server_init();
 #else
-	 /*// trial1
-	   gecko_bgapi_class_dfu_init();
-	   gecko_bgapi_class_system_init();
-	   gecko_bgapi_class_le_gap_init();
-	   gecko_bgapi_class_le_connection_init();
-	   gecko_bgapi_class_gatt_server_init();
 
-	   gecko_bgapi_class_hardware_init();
-	   gecko_bgapi_class_flash_init();
-	   gecko_bgapi_class_test_init();
-	   gecko_bgapi_class_mesh_node_init();
-	   gecko_bgapi_class_mesh_proxy_init();
-	   gecko_bgapi_class_mesh_proxy_server_init();
-	   gecko_bgapi_class_mesh_proxy_client_init();
-	   gecko_bgapi_class_mesh_generic_client_init();
-	   gecko_bgapi_class_mesh_lpn_init();
-
-	   gecko_bgapi_class_mesh_lc_client_init();
-	   //gecko_bgapi_class_mesh_lc_setup_client_init();
-	   gecko_bgapi_class_mesh_scene_client_init();
-	   //gecko_bgapi_class_mesh_scene_setup_client_init();
-	   	  gecko_bgapi_class_mesh_time_client_init();
-	   	  gecko_bgapi_class_mesh_scheduler_client_init();*/
-
-
-	   /*// works partially
-
-	     gecko_bgapi_class_dfu_init();
-	    gecko_bgapi_class_system_init();
-	    gecko_bgapi_class_le_gap_init();
-	    gecko_bgapi_class_le_connection_init();
-	    gecko_bgapi_class_gatt_server_init();
-	    gecko_bgapi_class_hardware_init();
-	    gecko_bgapi_class_flash_init();
-	    gecko_bgapi_class_test_init();
-	    gecko_bgapi_class_mesh_node_init();
-	    gecko_bgapi_class_mesh_proxy_init();
-	    gecko_bgapi_class_mesh_lpn_init();
-	    gecko_bgapi_class_mesh_proxy_server_init();
-	    gecko_bgapi_class_mesh_generic_client_init();
-	    gecko_bgapi_class_mesh_scene_client_init();
-	    gecko_bgapi_class_mesh_generic_server_init(); // <-- initialize generic server class
-
-	    //gecko_bgapi_class_mesh_scene_client_init(); // <-- scene server is not present in A10, so not needed.
-	                                                  //     If you use this code as your starter code for the
-	                                                  //     course project there may be more class initialization
-	                                                  //     functions to call.*/
 
 
 	  gecko_bgapi_class_dfu_init();
@@ -191,10 +152,18 @@ void appMain(const gecko_configuration_t *pConfig)
 
   // Initialize debug prints and display interface
   RETARGET_SerialInit();
+
+
 #if !PIR_SENSOR
   DI_Init();
 #endif
 
+
+#if TEMP_SENSOR
+
+  i2cStructInit();
+
+#endif
 
 #if NOISE_SENSOR
   sound_init();
@@ -238,6 +207,9 @@ void appMain(const gecko_configuration_t *pConfig)
     if (pass) {
       handle_gecko_event(BGLIB_MSG_ID(evt->header), evt);
     }
+		#if TEMP_SENSOR
+    		state_machine(evt);
+		#endif
   }
 }
 
@@ -999,12 +971,17 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 	         log("mesh_generic_client_init_on_off failed, code 0x%x\r\n", result);
 	       }
 
-	       result = gecko_cmd_mesh_generic_client_init_common()->result;
+	      /* result = gecko_cmd_mesh_generic_client_init_common()->result;
 	       if (result) {
 	         log("mesh_generic_client_init_common failed, code 0x%x\r\n", result);
-	       }
+	       }*/
 
+	       result = gecko_cmd_mesh_generic_client_init_level()->result;
+	       if (result) {
+	      	         log("mesh_generic_client_init_level failed, code 0x%x\r\n", result);
+	      	       }
 
+	       gecko_cmd_mesh_generic_client_init();
 	       // Initialize scene client model
 	      /* result = gecko_cmd_mesh_scene_client_init(0)->result;
 	       if (result) {
@@ -1019,6 +996,10 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 	         _my_address = pData->address;
 
 	         enable_sound_interrupts();
+			#if TEMP_SENSOR
+	         	 selectedFREQ = selectLXFO();
+	         	 initialize_LETIMER0(selectedFREQ);
+			#endif
 	         node_init();
 
 	         // Initialize Low Power Node functionality
@@ -1037,12 +1018,15 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 
 	     case gecko_evt_system_external_signal_id:
 	    // {
+
 	    	if ((pEvt->data.evt_system_external_signal.extsignals & EXT_SIGNAL_NOISE) == 0x32)
 	    	{
 	    		    log("NOISE DETECTED\n\r");
 	    		    //log("GPIOsound in ext = %lu\n\r",GPIOsound);
-	    		    change_switch_position(ON);
+	    		   // change_switch_position(ON);
+	    		    send_level_request(a1,d1);
 	    	}
+
 	     break;
 	     case gecko_evt_mesh_node_provisioning_started_id:
 	       log("Started provisioning\r\n");
@@ -1069,6 +1053,10 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 
 
 	       enable_sound_interrupts();
+			#if TEMP_SENSOR
+	         	 selectedFREQ = selectLXFO();
+	         	 initialize_LETIMER0(selectedFREQ);
+			#endif
 	       break;
 
 	     case gecko_evt_mesh_node_provisioning_failed_id:
@@ -1159,9 +1147,13 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 	       break;
 
 	     case gecko_evt_mesh_lpn_friendship_established_id:
+	    	 //send_level_request(a1,d1);
+	    	 //break;
 	     case gecko_evt_mesh_lpn_friendship_failed_id:
 	     case gecko_evt_mesh_lpn_friendship_terminated_id:
 	       handle_lpn_events(pEvt);
+
+
 	       break;
 
 	     default:

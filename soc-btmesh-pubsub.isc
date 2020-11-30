@@ -1,5 +1,5 @@
 #ISD afv6
-# Simplicity Studio version: 5.18.7.202008130736-45
+# Simplicity Studio version: 5.20.0.202010151757-46
 
 # Application configuration
 stackId: com.silabs.sdk.stack.btmesh

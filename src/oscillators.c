@@ -1,56 +1,79 @@
 /**************************************************************************************************
  * @file      oscillators.c
- * @version   0.4.0
- * @brief     oscillators.c Function Implementations to configure LFXO and ULFRCO oscillators
+ * @version   0.0.1
+ * @brief     oscillators.c include functions to enable the LETIMER0 clock tree
  *
- * @author    Atharv Desai, atharv.desai@Colorado.edu
- * @date      Sep 06, 2020
+ * @author    Aaksha Jaywant, aaksha.jaywant@colorado.edu
+ * @date      Sep 6, 2020
  *
  * @institution University of Colorado Boulder (UCB)
  * @course      ECEN 5823-001: IoT Embedded Firmware (Fall 2020)
  * @instructor  David Sluiter
  *
- * @assignment ecen5823-assignment4-atharvdesai1996
+ * @assignment ecen5823-assignment4-aakshajaywant
  * @due        Sep 25, 2020
  *
- * @resources : David Sluiter IoT Embedded Firmware Course slides
+ * @resources  Utilized Silicon Labs' EMLIB peripheral libraries to implement functionality.
  *
  * @copyright  All rights reserved. Distribution allowed only for the use of assignment grading.
  *       Use of code excerpts allowed at the discretion of author. Contact for permission.
  */
-#include "app.h"
 
 
 
-/*  Function name: Osc_clock_select()
- *  Description:   Configure the Oscillator LXFO or ULFRCO based on Energy Modes EM0 to EM3
- *  Return type:   void (none)
- *  Arguments : none
- */
-void Osc_clock_select()
+#include "oscillators.h"
+
+
+CMU_LFXOInit_TypeDef lfxoInit;
+
+CMU_ClkDiv_TypeDef div_freq;
+
+
+/*
+* FUNCTION:- selectLXFO
+* DESCRIPTION:- This function selects the LXFO oscillator
+* PARAMETERS:- None
+* RETURN VALUE:- Returns uint32_t divided frequency
+**/
+
+
+uint32_t selectLXFO(void)
 {
-	CMU_OscillatorEnable(my_osc, true, true);
-	CMU_ClockSelectSet(cmuClock_LFA, my_clock_select);
-	CMU_ClockEnable(cmuClock_LFA, true);
-	CMU_ClockDivSet(cmuClock_LETIMER0,my_clock_div);
-    frequency = CMU_ClockFreqGet(cmuClock_LETIMER0);
-	CMU_ClockEnable(cmuClock_LETIMER0, true);
-	led_calc();
+	uint32_t freq_val;
+	CMU_OscillatorEnable(cmuOsc_LFXO ,true,true);					//Osc LFXO
+	CMU_ClockSelectSet(cmuClock_LFA, cmuSelect_LFXO);				//LFXO clk select
+	CMU_ClockEnable(cmuClock_LFA,true);								//LFA clk Enable
+	freq_val = CMU_ClockFreqGet(cmuClock_LFA);
 
+	CMU_ClockDivSet(cmuClock_LETIMER0,cmuClkDiv_4);				//clk divide set
+	div_freq = CMU_ClockDivGet(cmuClock_LETIMER0);				//divide get
+	freq_val = CMU_ClockFreqGet(cmuClock_LETIMER0);					//clock freq get
+
+	CMU_ClockEnable(cmuClock_LETIMER0,true);					//LETIMER0 clk enable
+	return freq_val;
 }
 
-/*  Function name: led_calc()
- *  Description:   Calculate the LED on and total time period
- *  Return type:   void (none)
- *  Arguments : none
- */
-void led_calc()
+/*
+* FUNCTION:- selectULFRCO
+* DESCRIPTION:- This function selects the LXFO oscillator
+* PARAMETERS:- None
+* RETURN VALUE:- Returns uint32_t divided frequency
+**/
+
+uint32_t selectULFRCO(void)
 {
-	 led_period = frequency * LETIMER_PERIOD_MS *0.001;    // Computing the value for comp0 block
+	uint32_t freq_val;
+	CMU_OscillatorEnable(cmuOsc_ULFRCO ,true,true);				//Osc ULFRCO
+	CMU_ClockSelectSet(cmuClock_LFA, cmuSelect_ULFRCO);			//ULFRCO Clk select
+	CMU_ClockEnable(cmuClock_LFA,true);								//LFA clk Enable
+	freq_val = CMU_ClockFreqGet(cmuClock_LFA);
+	CMU_ClockDivSet(cmuClock_LETIMER0,cmuClkDiv_1);				//clk divide set
+	div_freq = CMU_ClockDivGet(cmuClock_LETIMER0);				//divide get
+	freq_val = CMU_ClockFreqGet(cmuClock_LETIMER0);					//clock freq get
+	CMU_ClockEnable(cmuClock_LETIMER0,true);					//LETIMER0 clk enable
+	return freq_val;
+
+
 }
-
-
-
-
 
 
