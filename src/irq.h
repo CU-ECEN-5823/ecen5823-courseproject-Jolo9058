@@ -29,6 +29,12 @@
 #include "scheduler.h"
 #include "i2c.h"
 
+
+#ifdef ENABLE_LOGGING
+#define log(...) printf(__VA_ARGS__)
+#else
+#define log(...)
+#endif
 uint32_t TimestampCNT;
 
 void LETIMER0_IRQHandler(void);

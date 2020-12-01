@@ -42,6 +42,7 @@ void LETIMER0_IRQHandler(void)
 
 	if ((LETIMER_IntGet(LETIMER0) & LETIMER_IF_UF))										//Underflow Interrupt Flag Check
 	{
+		log("In timer UF\n\r");
 		 TimestampCNT++;
 		 LETIMER_IntClear(LETIMER0,(LETIMER_IntGet(LETIMER0)));
 		 CORE_ENTER_CRITICAL();
@@ -52,6 +53,7 @@ void LETIMER0_IRQHandler(void)
 	}
 else if ((LETIMER_IntGet(LETIMER0) & LETIMER_IF_COMP1))
 	{
+	log("In timer COMP1\n\r");
 		LETIMER_IntClear(LETIMER0, (LETIMER_IntGet(LETIMER0)));
 		CORE_ENTER_CRITICAL();
 		schedulerSetEventCOMP1();													//Call to the UF flag event scheduler
@@ -70,6 +72,7 @@ else if ((LETIMER_IntGet(LETIMER0) & LETIMER_IF_COMP1))
 void I2C0_IRQHandler(void)
 {
 	CORE_DECLARE_IRQ_STATE;
+	log("In i2c int handler\n\r");
 	retSTAT = I2C_Transfer(I2C0);
 	CORE_ENTER_CRITICAL();
 	schedulerSetEventI2C();

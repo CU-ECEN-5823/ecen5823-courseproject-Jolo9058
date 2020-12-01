@@ -160,8 +160,10 @@ void appMain(const gecko_configuration_t *pConfig)
 
 
 #if TEMP_SENSOR
-
-  i2cStructInit();
+  selectedFREQ = selectLXFO();
+ 	         	 initialize_LETIMER0(selectedFREQ);
+ 	         	i2cStructInit();
+ // i2cStructInit();
 
 #endif
 
@@ -997,8 +999,9 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 
 	         enable_sound_interrupts();
 			#if TEMP_SENSOR
-	         	 selectedFREQ = selectLXFO();
-	         	 initialize_LETIMER0(selectedFREQ);
+	         	// selectedFREQ = selectLXFO();
+	         	 //initialize_LETIMER0(selectedFREQ);
+	         	//i2cStructInit();
 			#endif
 	         node_init();
 
@@ -1023,8 +1026,8 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 	    	{
 	    		    log("NOISE DETECTED\n\r");
 	    		    //log("GPIOsound in ext = %lu\n\r",GPIOsound);
-	    		   // change_switch_position(ON);
-	    		    send_level_request(a1,d1);
+	    		    change_switch_position(ON);
+	    		    //send_level_request(a1,d1);
 	    	}
 
 	     break;
@@ -1054,8 +1057,9 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 
 	       enable_sound_interrupts();
 			#if TEMP_SENSOR
-	         	 selectedFREQ = selectLXFO();
-	         	 initialize_LETIMER0(selectedFREQ);
+	         	 //selectedFREQ = selectLXFO();
+	         	 //initialize_LETIMER0(selectedFREQ);
+	         	//i2cStructInit();
 			#endif
 	       break;
 

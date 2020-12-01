@@ -151,24 +151,29 @@ void process_event(uint32_t eventNum)
 
 void state_machine(struct gecko_cmd_packet* event)				//changed uint32 event
 {
+
 	State_t currentState;
 	static State_t nextState = stateIdle;
 	currentState = nextState;
 
 	switch(currentState)
 	{
+	log("IN STATE MACHINE\n\r");
 		case stateIdle:
+			log("IN STATE1\n\r");
 			nextState = stateIdle;
 
 			if((event->data.evt_system_external_signal.extsignals & LETIMER_IF_UF) == 4)
 			{
-				//LOG_INFO("IN STATE MACHINE");
+
 				enableSensor();
 				nextState = stateTimer80ms;
 				timerWaitUs(80000);
 			}
 			break;
 		case stateTimer80ms:
+
+			log("80ms 2\n\r");
 			nextState = stateTimer80ms;
 
 			if((event->data.evt_system_external_signal.extsignals  & LETIMER_IF_COMP1) == 2 )
@@ -181,17 +186,19 @@ void state_machine(struct gecko_cmd_packet* event)				//changed uint32 event
 			}
 			break;
 		case stateI2CWrite:
+			//log("IN STATE3\n\r");
 			nextState = stateI2CWrite;
 
 			if(((event->data.evt_system_external_signal.extsignals & 0x00000001) == 1) && retSTAT == i2cTransferDone )
 			{
-				SLEEP_SleepBlockEnd(2);
+				SLEEP_SleepBlockEnd(1);
 				NVIC_DisableIRQ(I2C0_IRQn);
 				timerWaitUs(10800);
 				nextState = stateTimer10ms;
 			}
 			break;
 		case stateTimer10ms:
+			log("IN STATE4\n\r");
 			nextState = stateTimer10ms;
 
 			if((event->data.evt_system_external_signal.extsignals & LETIMER_IF_COMP1) == 2 )
@@ -209,7 +216,7 @@ void state_machine(struct gecko_cmd_packet* event)				//changed uint32 event
 
 			if(((event->data.evt_system_external_signal.extsignals & 0x00000001) == 1) && retSTAT == i2cTransferDone )
 			{
-				SLEEP_SleepBlockEnd(2);
+				SLEEP_SleepBlockEnd(1);
 				NVIC_DisableIRQ(I2C0_IRQn);
 				float retprint = I2CTempPrint();
 				//disableSensor();
