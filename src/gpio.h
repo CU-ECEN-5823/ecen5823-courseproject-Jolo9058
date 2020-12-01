@@ -82,8 +82,10 @@ void enable_button_interrupts(void);
 	void sound_interrupt(void);
 
 #elif PIR_SENSOR == 1
-	#define	PIRLED_port gpioPortC   // Pin P5 on the breakout board
-	#define PIRLED_pin  8
+//	#define	PIRLED_port gpioPortC   // Pin P5 on the breakout board
+	//#define PIRLED_pin  8
+#define	PIRLED_port gpioPortA   // Pin P5 on the breakout board
+#define PIRLED_pin  3
 	#define	PIRLED_port1 gpioPortC   // Pin P7 on the breakout board
 	#define PIRLED_pin1  9
 	void gpioLedPIRSetOn(void);

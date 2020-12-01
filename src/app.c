@@ -1299,7 +1299,7 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 
 		     case gecko_evt_system_external_signal_id:
 		    // {
-			    	if ((pEvt->data.evt_system_external_signal.extsignals & EXT_SIGNAL_PIR) == 0x16)
+			    	if ((pEvt->data.evt_system_external_signal.extsignals & EXT_SIGNAL_PIR) ==EXT_SIGNAL_PIR)
 			    	    			 {
 			    	    		log("PIR external event_ #1");
 			    	    		gpioLedPIRSetOn();
@@ -1330,6 +1330,9 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 		                                         REPEATING);
 		       //led_set_state(LED_STATE_OFF);
 		       DI_Print("provisioned", DI_ROW_STATUS);
+		       DI_Print("connected", DI_ROW_CONNECTION);
+
+		       DI_Print("LPN with friend", 4);                        //##########dEBUG
 
 
 		       pir_init();
@@ -1426,6 +1429,9 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 		     case gecko_evt_mesh_lpn_friendship_failed_id:
 		     case gecko_evt_mesh_lpn_friendship_terminated_id:
 		       handle_lpn_events(pEvt);
+		       DI_Print("LPN with friend", 3);
+		       DI_Print("LPN with friend", 8);
+
 		       break;
 
 		     default:
