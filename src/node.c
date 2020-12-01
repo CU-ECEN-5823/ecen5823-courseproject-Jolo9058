@@ -117,39 +117,37 @@ static void onoff_request(uint16_t model_id,
   log("ON/OFF request: requested state=<%s>, transition=%lu, delay=%u\r\n",
       request->on_off ? "ON" : "OFF", transition_ms, delay_ms);
 
-  if (switch_pos == request->on_off) {
-    log("Request for current state received; no op\r\n");
-  } else {
+
     log("Turning alarm <%s>\r\n", request->on_off ? "ON" : "OFF");
 
-      switch_pos = request->on_off;
-      if(switch_pos && !get_alarm_deactivate()){
-    	  set_alarm_state(1);
-    	  DI_Print("Alarm Active!", DI_ROW_LIGHTNESS);
+	  switch_pos = request->on_off;
+	  if(switch_pos && !get_alarm_deactivate()){
+		  set_alarm_state(1);
+		  DI_Print("Alarm Active!", DI_ROW_LIGHTNESS);
 
-    	  struct gecko_msg_flash_ps_load_rsp_t * load_result = gecko_cmd_flash_ps_load(STORAGE_KEY);
-    	  storage_val[0] = load_result->value.data[0] + 1;
-    	  if(load_result->result){
-    		  log("Persistent storage load failed. Error code: %x\n\r", load_result->result);
-    	  }
-    	  else{
-    		  log("Total alarms: %d\n\r", storage_val[0]);
-    		  sprintf(buf, "Total Alarms: %d", storage_val[0]);
-    		  DI_Print(buf, 8);
-    	  }
+		  struct gecko_msg_flash_ps_load_rsp_t * load_result = gecko_cmd_flash_ps_load(STORAGE_KEY);
+		  storage_val[0] = load_result->value.data[0] + 1;
+		  if(load_result->result){
+			  log("Persistent storage load failed. Error code: %x\n\r", load_result->result);
+		  }
+		  else{
+			  log("Total alarms: %d\n\r", storage_val[0]);
+			  sprintf(buf, "Total Alarms: %d", storage_val[0]);
+			  DI_Print(buf, 8);
+		  }
 
 
-    	  struct gecko_msg_flash_ps_save_rsp_t * store_result = gecko_cmd_flash_ps_save(STORAGE_KEY, 1, storage_val);
-    	  if(store_result->result){
-    		  log("Persistent storage store failed. Error code: %x\n\r", store_result->result);
-    	  }
+		  struct gecko_msg_flash_ps_save_rsp_t * store_result = gecko_cmd_flash_ps_save(STORAGE_KEY, 1, storage_val);
+		  if(store_result->result){
+			  log("Persistent storage store failed. Error code: %x\n\r", store_result->result);
+		  }
 
-      }
-      else{
-    	  set_alarm_state(0);
-    	  if(!get_alarm_deactivate()) DI_Print("Alarm Not Active", DI_ROW_LIGHTNESS);
-      }
-    }
+	  }
+	  else{
+		  set_alarm_state(0);
+		  if(!get_alarm_deactivate()) DI_Print("Alarm Not Active", DI_ROW_LIGHTNESS);
+	  }
+
 }
 
 
