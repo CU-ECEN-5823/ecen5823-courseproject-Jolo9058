@@ -92,6 +92,13 @@ main.o: ../main.c ../init_mcu.h ../board_features.h \
  C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\platform\emdrv\sleep\inc/sleep.h \
  ../src/oscillators.h ../src/timers.h \
  C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\platform\emlib\inc/em_letimer.h \
+ ../src/irq.h \
+ C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\platform\emlib\inc/em_core.h \
+ ../src/scheduler.h ../src/i2c.h \
+ C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\hardware\kit\common\drivers/i2cspm.h \
+ C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\hardware\kit\common\halconfig/i2cspmhalconfig.h \
+ C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\platform\emlib\inc/em_i2c.h \
+ ../src/gpio.h \
  C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\protocol\bluetooth\ble_stack\inc\soc/coexistence-ble.h
 
 ../init_mcu.h:
@@ -295,5 +302,21 @@ C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\pl
 ../src/timers.h:
 
 C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\platform\emlib\inc/em_letimer.h:
+
+../src/irq.h:
+
+C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\platform\emlib\inc/em_core.h:
+
+../src/scheduler.h:
+
+../src/i2c.h:
+
+C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\hardware\kit\common\drivers/i2cspm.h:
+
+C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\hardware\kit\common\halconfig/i2cspmhalconfig.h:
+
+C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\platform\emlib\inc/em_i2c.h:
+
+../src/gpio.h:
 
 C:\Users\School\SimplicityStudio\v4_workspace\ecen5823-courseproject-Jolo9058\protocol\bluetooth\ble_stack\inc\soc/coexistence-ble.h:

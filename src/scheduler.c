@@ -49,7 +49,7 @@ void schedulerSetEventUF(void)
 {
 
 	//UF_flag |= LETIMER_IF_UF;
-	 gecko_external_signal(LETIMER_IF_UF);
+	 gecko_external_signal(LETIMER_UF_SCHEDULE);
 }
 
 
@@ -62,7 +62,7 @@ void schedulerSetEventUF(void)
 void schedulerSetEventCOMP1(void)
 {
 	//UF_flag |= LETIMER_IF_COMP1;
-	gecko_external_signal(LETIMER_IF_COMP1);
+	gecko_external_signal(LETIMER_COMP1_SCHEDULE);
 }
 
 
@@ -75,7 +75,7 @@ void schedulerSetEventCOMP1(void)
 void schedulerSetEventI2C(void)
 {
 	//UF_flag |= 0x00000001;
-	gecko_external_signal(0x00000001);
+	gecko_external_signal(I2C_SCHEDULE);
 }
 
 /*
@@ -163,7 +163,7 @@ void state_machine(struct gecko_cmd_packet* event)				//changed uint32 event
 			log("IN STATE1\n\r");
 			nextState = stateIdle;
 
-			if((event->data.evt_system_external_signal.extsignals & LETIMER_IF_UF) == 4)
+			if((event->data.evt_system_external_signal.extsignals & LETIMER_IF_UF))
 			{
 
 				enableSensor();
@@ -217,7 +217,7 @@ void state_machine(struct gecko_cmd_packet* event)				//changed uint32 event
 			if(((event->data.evt_system_external_signal.extsignals & 0x00000001) == 1) && retSTAT == i2cTransferDone )
 			{
 				SLEEP_SleepBlockEnd(1);
-				NVIC_DisableIRQ(I2C0_IRQn);
+				NVIC_DisableIRQ (I2C0_IRQn);
 				float retprint = I2CTempPrint();
 				//disableSensor();
 				//temperatureMeasure((uint32_t)retprint);

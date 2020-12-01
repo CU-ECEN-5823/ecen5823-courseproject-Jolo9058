@@ -52,6 +52,10 @@ typedef enum TempReadSequence
 }State_t;
 
 
+#define LETIMER_UF_SCHEDULE (0x1 << 2)
+#define LETIMER_COMP1_SCHEDULE (0x1 << 1)
+#define I2C_SCHEDULE (0x1)
+
 void schedulerSetEventUF(void);
 uint32_t get_event();
 bool events_present();

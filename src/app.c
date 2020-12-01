@@ -31,6 +31,7 @@
 
 #include "app.h"
 #include "alarm.h"
+#include "scheduler.h"
 
 #ifdef ENABLE_LOGGING
 #define log(...) printf(__VA_ARGS__)
@@ -1022,13 +1023,30 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 	     case gecko_evt_system_external_signal_id:
 	    // {
 
-	    	if ((pEvt->data.evt_system_external_signal.extsignals & EXT_SIGNAL_NOISE) == 0x32)
+	    	if ((pEvt->data.evt_system_external_signal.extsignals & EXT_SIGNAL_NOISE))
 	    	{
 	    		    log("NOISE DETECTED\n\r");
 	    		    //log("GPIOsound in ext = %lu\n\r",GPIOsound);
 	    		    change_switch_position(ON);
 	    		    //send_level_request(a1,d1);
 	    	}
+
+	    	if(pEvt->data.evt_system_external_signal.extsignals & I2C_SCHEDULE)
+	    	{
+	    		SLEEP_SleepBlockEnd(2);
+	    		NVIC_DisableIRQ(I2C0_IRQn);
+	    	}
+	    	if(pEvt->data.evt_system_external_signal.extsignals & LETIMER_COMP1_SCHEDULE)
+	    	{
+	    		//SLEEP_SleepBlockEnd(4);
+	    		LETIMER_IntDisable(LETIMER0,LETIMER_IFC_COMP1);
+	    	}
+	    	if(pEvt->data.evt_system_external_signal.extsignals & LETIMER_UF_SCHEDULE)
+	    	{
+	    		TempReadSequence();
+	    	}
+
+
 
 	     break;
 	     case gecko_evt_mesh_node_provisioning_started_id:

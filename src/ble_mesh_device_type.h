@@ -15,7 +15,7 @@
 #define FRIEND_NODE 0
 #define NOISE_SENSOR 1
 #define PIR_SENSOR 0
-#define TEMP_SENSOR 0
+#define TEMP_SENSOR 1
 
 /**
  * Set to 1 to build an on/off publisher client model for Assignment 10
