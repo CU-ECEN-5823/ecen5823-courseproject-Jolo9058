@@ -169,6 +169,7 @@ void state_machine(struct gecko_cmd_packet* event)				//changed uint32 event
 				enableSensor();
 				nextState = stateTimer80ms;
 				timerWaitUs(80000);
+				//gecko_cmd_hardware_set_soft_timer(2650,RESTART_TIMER,1);
 			}
 			break;
 		case stateTimer80ms:
@@ -186,7 +187,7 @@ void state_machine(struct gecko_cmd_packet* event)				//changed uint32 event
 			}
 			break;
 		case stateI2CWrite:
-			//log("IN STATE3\n\r");
+			log("IN STATE3\n\r");
 			nextState = stateI2CWrite;
 
 			if(((event->data.evt_system_external_signal.extsignals & 0x00000001) == 1) && retSTAT == i2cTransferDone )
@@ -194,6 +195,7 @@ void state_machine(struct gecko_cmd_packet* event)				//changed uint32 event
 				SLEEP_SleepBlockEnd(1);
 				NVIC_DisableIRQ(I2C0_IRQn);
 				timerWaitUs(10800);
+				//gecko_cmd_hardware_set_soft_timer(340,RESTART_TIMER,1);
 				nextState = stateTimer10ms;
 			}
 			break;
@@ -228,3 +230,22 @@ void state_machine(struct gecko_cmd_packet* event)				//changed uint32 event
 			break;
 	}
 }
+
+
+/*void i2c_state(void)
+{
+	enableSensor();
+	gecko_cmd_hardware_set_soft_timer(2650,RESTART_TIMER,1);
+	retSTAT = I2CWriteForIRQ();
+	if(retSTAT != i2cTransferInProgress)
+		log("ERROR I2cWrite");
+	SLEEP_SleepBlockEnd(1);
+	NVIC_DisableIRQ(I2C0_IRQn);
+	gecko_cmd_hardware_set_soft_timer(340,RESTART_TIMER,1);
+	retSTAT = I2CReadForIRQ();
+	if(retSTAT != i2cTransferInProgress)
+		log("ERROR I2cRead");
+	SLEEP_SleepBlockEnd(1);
+	NVIC_DisableIRQ(I2C0_IRQn);
+	float retprint = I2CTempPrint();
+}*/

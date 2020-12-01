@@ -1023,25 +1023,24 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 	     case gecko_evt_system_external_signal_id:
 	    // {
 
-	    	if ((pEvt->data.evt_system_external_signal.extsignals & EXT_SIGNAL_NOISE))
+	    	if ((pEvt->data.evt_system_external_signal.extsignals & EXT_SIGNAL_NOISE ))
 	    	{
 	    		    log("NOISE DETECTED\n\r");
 	    		    //log("GPIOsound in ext = %lu\n\r",GPIOsound);
 	    		    change_switch_position(ON);
 	    		    //send_level_request(a1,d1);
 	    	}
-
-	    	if(pEvt->data.evt_system_external_signal.extsignals & I2C_SCHEDULE)
+	    	else if(pEvt->data.evt_system_external_signal.extsignals & I2C_SCHEDULE)
 	    	{
 	    		SLEEP_SleepBlockEnd(2);
 	    		NVIC_DisableIRQ(I2C0_IRQn);
 	    	}
-	    	if(pEvt->data.evt_system_external_signal.extsignals & LETIMER_COMP1_SCHEDULE)
+	    	else if(pEvt->data.evt_system_external_signal.extsignals & LETIMER_COMP1_SCHEDULE)
 	    	{
 	    		//SLEEP_SleepBlockEnd(4);
 	    		LETIMER_IntDisable(LETIMER0,LETIMER_IFC_COMP1);
 	    	}
-	    	if(pEvt->data.evt_system_external_signal.extsignals & LETIMER_UF_SCHEDULE)
+	    	else if(pEvt->data.evt_system_external_signal.extsignals & LETIMER_UF_SCHEDULE)
 	    	{
 	    		TempReadSequence();
 	    	}
@@ -1177,7 +1176,8 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 
 
 	       break;
-
+	     //case gecko_evt_hardware_soft_timer_id:
+	    //	 break;
 	     default:
 	       //log("unhandled evt: %8.8x class %2.2x method %2.2x\r\n", evt_id, (evt_id >> 16) & 0xFF, (evt_id >> 24) & 0xFF);
 	       break;

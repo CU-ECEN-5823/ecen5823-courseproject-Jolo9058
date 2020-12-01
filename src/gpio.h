@@ -56,8 +56,8 @@
 #define EXT_SIGNAL_PB0_RELEASE           0x02
 #define EXT_SIGNAL_PB1_PRESS             0x04
 #define EXT_SIGNAL_PB1_RELEASE           0x08
-#define EXT_SIGNAL_PIR                   0x16
-#define EXT_SIGNAL_NOISE 				 0x32
+#define EXT_SIGNAL_PIR                   16
+#define EXT_SIGNAL_NOISE 				 32
 
 /***************************************************************************//**
  * Button initialization. Configure pushbuttons PB0, PB1 as inputs.
