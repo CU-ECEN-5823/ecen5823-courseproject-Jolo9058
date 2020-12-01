@@ -65,7 +65,7 @@ static uint8_t provisioning_finished = 0;
 uint16_t a1 = 78, d1 = 0;
 
 
-#if TEMP_SENSOR
+#if TEMP_SENSOR || ENABLE_SLEEPING
 uint32_t selectedFREQ;
 #endif
 
@@ -135,6 +135,27 @@ static void gecko_bgapi_classes_init(void)
 #endif
 }
 
+
+///////////////////////////////////////
+
+void SleepInitFUNC(void)
+{
+
+	SLEEP_Init_t initSLEEP_obj;
+	memset(&initSLEEP_obj, 0, sizeof(initSLEEP_obj));				//Initialize SLEEP_Init_t to 0
+	SLEEP_InitEx(&initSLEEP_obj);
+	SLEEP_SleepBlockBegin(LOWEST_ENERGY_MODE + 1);
+
+
+}
+
+
+/////////////////////////////////////////
+
+
+
+
+
 /*******************************************************************************
  * Main application code.
  * @param[in] pConfig  Pointer to stack configuration.
@@ -192,6 +213,36 @@ void appMain(const gecko_configuration_t *pConfig)
   /////////////////////////////
   //Osc_clock_select();  // Enabling the oscillator
   //mysleep();           // Initialize the sleep
+
+
+
+  ///////////////////////////////////////////
+#if (ENABLE_SLEEPING)
+
+#if LOWEST_ENERGY_MODE == 0
+				selectedFREQ = selectLXFO();							//selects the LXFO oscillator
+			#endif
+
+			#if LOWEST_ENERGY_MODE == 1
+				selectedFREQ = selectLXFO();							//selects the LXFO oscillator
+			#endif
+
+			#if LOWEST_ENERGY_MODE == 2
+				selectedFREQ = selectLXFO();							//selects the LXFO oscillator
+			#endif
+
+			#if LOWEST_ENERGY_MODE == 3
+				selectedFREQ = selectULFRCO();							//selects the ULFRCO oscillator
+			#endif
+
+
+initialize_LETIMER0(selectedFREQ);
+
+SleepInitFUNC();
+#endif
+  ///////////////////////////////////////////
+
+
   while (1) {
     // Event pointer for handling events
     struct gecko_cmd_packet* evt;
@@ -1032,16 +1083,17 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 	    	}
 	    	else if(pEvt->data.evt_system_external_signal.extsignals & I2C_SCHEDULE)
 	    	{
-	    		SLEEP_SleepBlockEnd(2);
+	    		//SLEEP_SleepBlockEnd(2);
 	    		NVIC_DisableIRQ(I2C0_IRQn);
 	    	}
 	    	else if(pEvt->data.evt_system_external_signal.extsignals & LETIMER_COMP1_SCHEDULE)
 	    	{
-	    		//SLEEP_SleepBlockEnd(4);
+	    		SLEEP_SleepBlockEnd(2);
 	    		LETIMER_IntDisable(LETIMER0,LETIMER_IFC_COMP1);
 	    	}
 	    	else if(pEvt->data.evt_system_external_signal.extsignals & LETIMER_UF_SCHEDULE)
 	    	{
+	    		SLEEP_SleepBlockEnd(2);
 	    		TempReadSequence();
 	    	}
 

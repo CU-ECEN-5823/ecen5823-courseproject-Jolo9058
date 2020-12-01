@@ -162,7 +162,7 @@ I2C_TransferReturn_TypeDef I2CWriteForIRQ(void)
 	transferINIT.buf[0].data = (uint8_t *)i2cWrDATA;
 	transferINIT.buf[0].len = 1;
 	NVIC_EnableIRQ(I2C0_IRQn);
-	SLEEP_SleepBlockBegin(1);
+	SLEEP_SleepBlockBegin(2);
 	retSTAT = I2C_TransferInit(I2C0,&transferINIT);
 	return retSTAT;
 }
@@ -181,7 +181,7 @@ I2C_TransferReturn_TypeDef I2CReadForIRQ(void)
 	transferINIT1.buf[0].data = i2cRdDATA;				//Read func buffers are different
 	transferINIT1.buf[0].len = 2;
 	NVIC_EnableIRQ(I2C0_IRQn);
-	SLEEP_SleepBlockBegin(1);
+	SLEEP_SleepBlockBegin(2);
 	retSTAT = I2C_TransferInit(I2C0,&transferINIT1);
 	return retSTAT;
 }
@@ -195,9 +195,12 @@ I2C_TransferReturn_TypeDef I2CReadForIRQ(void)
 
 float I2CTempPrint(void)
 {
-	tempVAL = (((uint16_t)(i2cRdDATA[0])) << 8) | (i2cRdDATA[1]);
-	tempFINAL = ((float)((float)(175.72 * tempVAL))/65536)-46.85;
-	log("Read temperature %lu\n\r", (uint32_t)tempFINAL);
-	return tempFINAL;
+	uint16_t temp_send;
+		tempVAL = (((uint16_t)(i2cRdDATA[0])) << 8) | (i2cRdDATA[1]);
+		tempFINAL = ((float)((float)(175.72 * tempVAL))/65536)-46.85;
+		temp_send = ((175.72 * tempVAL)/65536)-46.85;
+		log("Read temperature %lu\n\r", (uint32_t)tempFINAL);
+		send_level_request(temp_send,0);
+		return tempFINAL;
 }
 

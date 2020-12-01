@@ -192,7 +192,7 @@ void state_machine(struct gecko_cmd_packet* event)				//changed uint32 event
 
 			if(((event->data.evt_system_external_signal.extsignals & 0x00000001) == 1) && retSTAT == i2cTransferDone )
 			{
-				SLEEP_SleepBlockEnd(1);
+				SLEEP_SleepBlockEnd(2);
 				NVIC_DisableIRQ(I2C0_IRQn);
 				timerWaitUs(10800);
 				//gecko_cmd_hardware_set_soft_timer(340,RESTART_TIMER,1);
@@ -218,7 +218,7 @@ void state_machine(struct gecko_cmd_packet* event)				//changed uint32 event
 
 			if(((event->data.evt_system_external_signal.extsignals & 0x00000001) == 1) && retSTAT == i2cTransferDone )
 			{
-				SLEEP_SleepBlockEnd(1);
+				SLEEP_SleepBlockEnd(2);
 				NVIC_DisableIRQ (I2C0_IRQn);
 				float retprint = I2CTempPrint();
 				//disableSensor();

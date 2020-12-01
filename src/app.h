@@ -85,6 +85,16 @@
 */
 
 ////////////////////////////////////////////////////
+void SleepInitFUNC(void);
+void DeepSleep(void);
+
+//#define LOWEST_ENERGY_MODE 0
+//#define LOWEST_ENERGY_MODE 1
+#define LOWEST_ENERGY_MODE 2
+//#define LOWEST_ENERGY_MODE 3
+
+#define ENABLE_SLEEPING 0
+////////////////////////////////////////////////////
 
 /***************************************************************************//**
  * Main application code.
