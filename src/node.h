@@ -74,6 +74,6 @@ void handle_retrans_timer_evt(struct gecko_cmd_packet *pEvt);
 
 static uint8_t storage_val[1];
 
-
+void send_level_request(uint16_t temp_data, uint16_t delay);
 
 #endif /* SWITCH_H */

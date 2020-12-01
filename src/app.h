@@ -69,7 +69,7 @@
 #include <stdio.h>
 
 ///////////////////////////////////////////////////
-#define LETIMER_PERIOD_MS 3000
+/*#define LETIMER_PERIOD_MS 3000
 #define LOWEST_ENERGY_MODE  3   // Options are 0 1 2 3
 
 
@@ -82,6 +82,7 @@
 	#define my_clock_select cmuSelect_ULFRCO
     #define my_clock_div    cmuClkDiv_1     // For ULFRCO, no need of div
 #endif
+*/
 
 ////////////////////////////////////////////////////
 
@@ -95,7 +96,7 @@ int get_alarm_deactivate();
 
 
 
-uint32_t frequency;
+//uint32_t frequency;
 
 
 

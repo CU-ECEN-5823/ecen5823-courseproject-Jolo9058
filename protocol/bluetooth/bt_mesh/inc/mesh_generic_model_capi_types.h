@@ -122,6 +122,8 @@ struct mesh_generic_on_power_up_state {
   uint8_t on_power_up;
 };
 
+
+
 /** Generic level state */
 struct mesh_generic_level_state {
   /** By default the level range is from -32768 to 32767,
