@@ -42,9 +42,9 @@ void TempReadSequence(void)
 	//enableSensor();
 	//timerWaitUs(80000);
 	I2CWriteForIRQ();
-	timerWaitUs(10000);
-	I2CReadForIRQ();
-	I2CTempPrint();
+//	timerWaitUs(10000);
+//	I2CReadForIRQ();
+//	I2CTempPrint();
 	//disableSensor();
 }
 

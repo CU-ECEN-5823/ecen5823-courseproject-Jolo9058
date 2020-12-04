@@ -2,7 +2,7 @@
  * @file  node.c was switch.c from Silabs soc-btmest-switch example code
  * @brief node module implementation
  *
- * @editor    Awesome Student, Awesome.Student@Colorado.edu
+ * @editor    Joe Lopez, Atharv Desai, Aaksha Jaywant
  * @date      Sep 15, 2020
  *
  * @institution University of Colorado Boulder (UCB)
@@ -121,7 +121,8 @@ static void onoff_request(uint16_t model_id,
     log("Turning alarm <%s>\r\n", request->on_off ? "ON" : "OFF");
 
 	  switch_pos = request->on_off;
-	  if(switch_pos && !get_alarm_deactivate()){
+
+	  if(switch_pos && !get_alarm_deactivate()){ 	  //if alarm is deactivated, just ignore it
 		  set_alarm_state(1);
 		  DI_Print("Alarm Active!", DI_ROW_LIGHTNESS);
 
@@ -171,6 +172,7 @@ void node_init(void)
 
 	  uint16_t res;
 
+	  //initialize mesh lib
 	  mesh_lib_init(malloc,free,10);
 
 	  //Initialize Friend functionality
@@ -180,14 +182,13 @@ void node_init(void)
 	    log("Friend init failed 0x%x\r\n", res);
 	  }
 
-	  uint8_t pwr_lvl[1];
-	  pwr_lvl[0] = 50;
-
+	  //register handler for on/off model
 	  mesh_lib_generic_server_register_handler(MESH_GENERIC_ON_OFF_SERVER_MODEL_ID,
 			                                           0,
 			                                           onoff_request,
 			                                           NULL,
 			                                           NULL);
+	  //register handler for level model
 	  mesh_lib_generic_server_register_handler(MESH_GENERIC_LEVEL_SERVER_MODEL_ID,
 			                                           0,
 			                                           level_request,

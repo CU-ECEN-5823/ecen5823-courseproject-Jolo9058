@@ -2,7 +2,7 @@
  * alarm.c
  *
  *  Created on: Nov 25, 2020
- *      Author: School
+ *      Author: Joe Lopez
  */
 
 

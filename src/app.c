@@ -84,6 +84,10 @@ static void gecko_bgapi_classes_init(void)
 
 
 #if FRIEND_NODE
+	/**********************************************************************************************/
+						// Friend Node Init Code //
+
+	/**********************************************************************************************/
 	  gecko_bgapi_class_dfu_init();
 	  gecko_bgapi_class_system_init();
 	  gecko_bgapi_class_le_gap_init();
@@ -301,6 +305,11 @@ static void initiate_factory_reset(void)
 static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 {
 #if FRIEND_NODE
+	/**********************************************************************************************/
+						// Friend Node Event Code //
+
+						// Author: Joe Lopez	  //
+	/**********************************************************************************************/
 	  uint16_t result;
 	  char buf[30]; // for sprintf, see below
 
@@ -376,18 +385,18 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 	        case ALARM_DEACTIVATE_TIMER:
 	        	set_ad_counter(get_ad_counter()-1);
 
-	        	if(get_ad_counter()){
+	        	if(get_ad_counter()){   //check and see if we're out of deactivate time
 	        		sprintf(buf, "%d", get_ad_counter());
-	        		DI_Print(buf, DI_ROW_TEMPERATURE);
-				    gecko_cmd_hardware_set_soft_timer(TIMER_MS_2_TIMERTICK(1000),
+	        		DI_Print(buf, 6);
+				    gecko_cmd_hardware_set_soft_timer(TIMER_MS_2_TIMERTICK(1000),  //start another 1-sec timer
 	    		                                        ALARM_DEACTIVATE_TIMER,
 	    		                                        SINGLE_SHOT);
 	        	}
 	        	else{
-					set_alarm_deactivate(0);
+					set_alarm_deactivate(0);		//time's up! reactivate alarm
 					log("Alarm re-activated\n\r");
-					DI_Print("Alarm Not Active", DI_ROW_LIGHTNESS);
-					DI_Print("" , DI_ROW_TEMPERATURE);
+					DI_Print("Alarm Not Active", DI_ROW_LIGHTNESS);  //go back to 'not active' state
+					DI_Print("" , 6);  //clear timer row (row 6)
 	        	}
 	        	break;
 
@@ -466,11 +475,11 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 	    			set_alarm_deactivate(1);
 	    			DI_Print("Alarm Deactivated", DI_ROW_LIGHTNESS);
 	    			set_ad_counter(DEACTIVATE_TIME_S);
-				    gecko_cmd_hardware_set_soft_timer(TIMER_MS_2_TIMERTICK(1000),
+				    gecko_cmd_hardware_set_soft_timer(TIMER_MS_2_TIMERTICK(1000), //start the first timer counter, 1 second
 	    		                                        ALARM_DEACTIVATE_TIMER,
 	    		                                        SINGLE_SHOT);
-				    sprintf(buf, "%d", DEACTIVATE_TIME_S);
-				    DI_Print(buf,  DI_ROW_TEMPERATURE);
+				    sprintf(buf, "%d", DEACTIVATE_TIME_S); //display how much deactivate time is left (at this point the full 10 sec)
+				    DI_Print(buf,  6);
 	    		}
 
 	    	}

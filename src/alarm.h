@@ -1,8 +1,8 @@
 /*
  * alarm.h
- *
+ * getters/setters for alarm deactivation variables
  *  Created on: Nov 25, 2020
- *      Author: School
+ *      Author: Joe Lopez
  */
 
 #ifndef SRC_ALARM_H_
