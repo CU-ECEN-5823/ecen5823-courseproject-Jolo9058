@@ -36,7 +36,7 @@
 #define INCLUDE_LOG_DEBUG 1
 //#include "log.h"
 #include "gpio.h"
-
+#include "node.h"
 #ifdef ENABLE_LOGGING
 #define log(...) printf(__VA_ARGS__)
 #else

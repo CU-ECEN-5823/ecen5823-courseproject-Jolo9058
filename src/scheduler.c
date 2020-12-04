@@ -169,6 +169,7 @@ void state_machine(struct gecko_cmd_packet* event)				//changed uint32 event
 				enableSensor();
 				nextState = stateTimer80ms;
 				timerWaitUs(80000);
+				//gecko_cmd_hardware_set_soft_timer(2650,RESTART_TIMER,1);
 			}
 			break;
 		case stateTimer80ms:
@@ -186,14 +187,15 @@ void state_machine(struct gecko_cmd_packet* event)				//changed uint32 event
 			}
 			break;
 		case stateI2CWrite:
-			//log("IN STATE3\n\r");
+			log("IN STATE3\n\r");
 			nextState = stateI2CWrite;
 
 			if(((event->data.evt_system_external_signal.extsignals & 0x00000001) == 1) && retSTAT == i2cTransferDone )
 			{
-				SLEEP_SleepBlockEnd(1);
+				SLEEP_SleepBlockEnd(2);
 				NVIC_DisableIRQ(I2C0_IRQn);
 				timerWaitUs(10800);
+				//gecko_cmd_hardware_set_soft_timer(340,RESTART_TIMER,1);
 				nextState = stateTimer10ms;
 			}
 			break;
@@ -216,7 +218,7 @@ void state_machine(struct gecko_cmd_packet* event)				//changed uint32 event
 
 			if(((event->data.evt_system_external_signal.extsignals & 0x00000001) == 1) && retSTAT == i2cTransferDone )
 			{
-				SLEEP_SleepBlockEnd(1);
+				SLEEP_SleepBlockEnd(2);
 				NVIC_DisableIRQ (I2C0_IRQn);
 				float retprint = I2CTempPrint();
 				//disableSensor();
@@ -228,3 +230,6 @@ void state_machine(struct gecko_cmd_packet* event)				//changed uint32 event
 			break;
 	}
 }
+
+
+

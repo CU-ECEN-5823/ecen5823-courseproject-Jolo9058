@@ -2,15 +2,15 @@
  * @file  gpio.h was buttons.h from Silabs soc-btmest-switch example code
  * @brief gpio header file
  *
- * @editor    Awesome Student, Awesome.Student@Colorado.edu
- * @date      Sep 15, 2020
+ * @editor    Atharv Desai, atharv.desai@colorado.edu
+ * @date      Nov 30, 2020
  *
  * @institution University of Colorado Boulder (UCB)
  * @course      ECEN 5823-001: IoT Embedded Firmware (Fall 2020)
  * @instructor  David Sluiter
  *
- * @assignment ecen5823-assignment10-AwesomeStudent
- * @due        Sep 18, 2020
+ * @assignment Final Project
+ * @due        Dec 4, 2020
  *
  * @resources  Utilized Silicon Labs' BT mesh v1.7 library
  *
@@ -42,9 +42,7 @@
 #define log(...)
 #endif
 
-//LowPowerNode == 1  for sound sensor
-//LowPowerNode == 2  for PIR sensor
-//#define LowPowerNode 2
+
 /*******************************************************************************
  * External signal definitions. These are used to signal button press events
  * from GPIO interrupt handler to application.
@@ -56,8 +54,8 @@
 #define EXT_SIGNAL_PB0_RELEASE           0x02
 #define EXT_SIGNAL_PB1_PRESS             0x04
 #define EXT_SIGNAL_PB1_RELEASE           0x08
-#define EXT_SIGNAL_PIR                   0x16
-#define EXT_SIGNAL_NOISE 				 0x32
+#define EXT_SIGNAL_PIR                   16
+#define EXT_SIGNAL_NOISE 				 32
 
 /***************************************************************************//**
  * Button initialization. Configure pushbuttons PB0, PB1 as inputs.
@@ -74,16 +72,16 @@ void enable_button_interrupts(void);
 	#include <stdint.h>
 	#define soundPort gpioPortA
 	#define soundGate 3
-	#define	PIRLED_port gpioPortA   // Pin P5 on the breakout board
-	#define PIRLED_pin  3
 	uint32_t GPIOsound;
 	void sound_init(void);
 	void enable_sound_interrupts(void);
 	void sound_interrupt(void);
 
 #elif PIR_SENSOR == 1
-	#define	PIRLED_port gpioPortC   // Pin P5 on the breakout board
-	#define PIRLED_pin  8
+//	#define	PIRLED_port gpioPortC   // Pin P5 on the breakout board
+	//#define PIRLED_pin  8
+#define	PIRLED_port gpioPortA   // Pin P5 on the breakout board
+#define PIRLED_pin  3
 	#define	PIRLED_port1 gpioPortC   // Pin P7 on the breakout board
 	#define PIRLED_pin1  9
 	void gpioLedPIRSetOn(void);

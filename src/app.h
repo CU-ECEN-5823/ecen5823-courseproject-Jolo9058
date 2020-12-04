@@ -2,15 +2,15 @@
  * @file  app.h from Silabs soc-btmest-switch example code
  * @brief app header file
  *
- * @editor    Awesome Student, Awesome.Student@Colorado.edu
- * @date      Sep 15, 2020
+  * @editor    Atharv Desai, atharv.desai@colorado.edu
+ * @date      Nov 30, 2020
  *
  * @institution University of Colorado Boulder (UCB)
  * @course      ECEN 5823-001: IoT Embedded Firmware (Fall 2020)
  * @instructor  David Sluiter
  *
- * @assignment ecen5823-assignment10-AwesomeStudent
- * @due        Sep 18, 2020
+ * @assignment Final Project
+ * @due        Dec 4, 2020
  *
  * @resources  Utilized Silicon Labs' BT mesh v1.7 library
  *
@@ -68,22 +68,16 @@
 #include "retargetserial.h"
 #include <stdio.h>
 
-///////////////////////////////////////////////////
-/*#define LETIMER_PERIOD_MS 3000
-#define LOWEST_ENERGY_MODE  3   // Options are 0 1 2 3
 
+void SleepInitFUNC(void);
+void DeepSleep(void);
+/* Uncomment one  of the energy modes as per requirement */
+//#define LOWEST_ENERGY_MODE 0
+//#define LOWEST_ENERGY_MODE 1
+#define LOWEST_ENERGY_MODE 2
+//#define LOWEST_ENERGY_MODE 3
 
-#if LOWEST_ENERGY_MODE == 0 || LOWEST_ENERGY_MODE == 1 || LOWEST_ENERGY_MODE == 2
-	#define my_osc cmuOsc_LFXO              // Enabling LFXO for EM0, EM1, EM2 modes
-	#define my_clock_select cmuSelect_LFXO
-    #define my_clock_div    cmuClkDiv_4     // Clock divide by 4 for getting min time period ~7Sec
-#elif LOWEST_ENERGY_MODE == 3
-	#define my_osc cmuOsc_ULFRCO            // Enabling ULFRCO for EM3 mode
-	#define my_clock_select cmuSelect_ULFRCO
-    #define my_clock_div    cmuClkDiv_1     // For ULFRCO, no need of div
-#endif
-*/
-
+#define ENABLE_SLEEPING 0
 ////////////////////////////////////////////////////
 
 /***************************************************************************//**

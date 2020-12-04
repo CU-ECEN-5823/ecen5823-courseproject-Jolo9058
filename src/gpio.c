@@ -2,15 +2,15 @@
  * @file  gpio.c was buttons.c from Silabs soc-btmest-switch example code
  * @brief gpio implementation file
  *
- * @editor    Awesome Student, Awesome.Student@Colorado.edu
- * @date      Sep 15, 2020
+ * @editor    Atharv Desai, atharv.desai@colorado.edu
+ * @date      Nov 30, 2020
  *
  * @institution University of Colorado Boulder (UCB)
  * @course      ECEN 5823-001: IoT Embedded Firmware (Fall 2020)
  * @instructor  David Sluiter
  *
- * @assignment ecen5823-assignment10-AwesomeStudent
- * @due        Sep 18, 2020
+ * @assignment Final Project
+ * @due        Dec 4, 2020
  *
  * @resources  Utilized Silicon Labs' BT mesh v1.7 library
  *
@@ -52,33 +52,31 @@ void button_init(void)
 
 
 #if NOISE_SENSOR
+/*
+* FUNCTION:- sound_init
+* DESCRIPTION:- Initializes sound detector sensor pin
+* PARAMETERS:- None
+* RETURN VALUE:- None
+**/
 void sound_init(void)
 {
-  // configure pushbutton PB0 and PB1 as inputs, with pull-up enabled
-	//GPIO_DriveStrengthSet(soundPort, gpioDriveStrengthWeakAlternateStrong);
-  GPIO_PinModeSet(soundPort, soundGate, gpioModeInputPull, 1);						//now
-	//GPIO_PinModeSet(PIRLED_port, PIRLED_pin, gpioModeInput, 1);
-	//GPIO_PinModeSet(soundPort, soundGate, gpioModeInputPullFilter , 1);
-//  GPIO_PinModeSet(BSP_BUTTON1_PORT, BSP_BUTTON1_PIN, gpioModeInputPull, 1);
+  GPIO_PinModeSet(soundPort, soundGate, gpioModeInputPull, 1);
+
 }
 
 
-
+/*
+* FUNCTION:- sound_interrupt
+* DESCRIPTION:- Sound sensor interrupt Handler
+* PARAMETERS:- None
+* RETURN VALUE:- None
+**/
 void sound_interrupt(void)
 {
-	//log("In sound interrupt\n\r");
-	GPIOsound = GPIO_PinInGet(soundPort,soundGate);						//now
-	//GPIOsound = GPIO_PinInGet(PIRLED_port,PIRLED_pin);
-			/*if(GPIOsound == 0)
-			{
-				//log("Quiet\n\r");
-				//gecko_external_signal(EXT_SIGNAL_PB0_PRESS);
-			}*/
-	//log("GPIOsound = %lu\n\r",GPIOsound);
+	GPIOsound = GPIO_PinInGet(soundPort,soundGate);
 			if(GPIOsound == 1)
 			{
 				log("Noisy\n\r");
-				//GPIOsound = 0;
 				gecko_external_signal(EXT_SIGNAL_NOISE);
 			}
 }
@@ -192,6 +190,12 @@ void enable_button_interrupts(void)
 
 
 #if NOISE_SENSOR == 1
+/*
+* FUNCTION:- enable_sound_interrupts
+* DESCRIPTION:- This function enables noise sensor interrupts
+* PARAMETERS:- None
+* RETURN VALUE:- None
+**/
 void enable_sound_interrupts(void)
 {
 
@@ -233,7 +237,7 @@ void enable_sound_interrupts(void)
  * GPIO initialization. Configure pushbuttons GPIO PC9 as output for external
  * LED indicator
  ******************************************************************************/
-#if PIR_SENSOR
+#if PIR_SENSOR == 1
 void gpioInit()
 {
 	GPIO_DriveStrengthSet(PIRLED_port1, gpioDriveStrengthWeakAlternateStrong);
@@ -253,11 +257,14 @@ void gpioLedPIRSetOff()
 /*******************************************************************************
  * GPIO initialization for PIR Interrupt. Configure pushbuttons GPIO PC8 as input
  * for external PIR interrupt
+ *
+ * @param[in] None
+ *
  ******************************************************************************/
 void pir_init()
 {
-	GPIO_PinModeSet(PIRLED_port, PIRLED_pin, gpioModeInput, 0);
-	GPIO_ExtIntConfig(PIRLED_port,PIRLED_pin, PIRLED_pin, true, true, true);
+	GPIO_PinModeSet(PIRLED_port, PIRLED_pin, gpioModeInput, 0);            // Setting appropriate pin mode
+	GPIO_ExtIntConfig(PIRLED_port,PIRLED_pin, PIRLED_pin, true, true, true);   // configuring the pin as external interrupt
 	CMU_ClockEnable(cmuClock_GPIO, true);
 	GPIOINT_Init();
 	GPIOINT_CallbackRegister(PIRLED_pin, pir_interrupt);
@@ -280,7 +287,7 @@ void pir_init()
 void pir_interrupt()
 {
 
-	if(GPIO_PinInGet(PIRLED_port,PIRLED_pin) == 1)
+	if(GPIO_PinInGet(PIRLED_port,PIRLED_pin) == 1)    // Checking of interrupt signal on the configured pin
 		{
 		printf("motion detected \n\r");
 

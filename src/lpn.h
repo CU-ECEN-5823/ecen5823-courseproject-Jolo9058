@@ -6,6 +6,19 @@
  * <b>Copyright 2020 Silicon Laboratories Inc. www.silabs.com</b>
  *******************************************************************************
  *
+ *
+ * @editor    Atharv Desai, atharv.desai@colorado.edu
+ * @date      Nov 30, 2020
+ *
+ * @institution University of Colorado Boulder (UCB)
+ * @course      ECEN 5823-001: IoT Embedded Firmware (Fall 2020)
+ * @instructor  David Sluiter
+ *
+ * @assignment Final Project
+ * @due        Dec 4, 2020
+ *
+ *
+ *
  * The licensor of this software is Silicon Laboratories Inc. Your use of this
  * software is governed by the terms of Silicon Labs Master Software License
  * Agreement (MSLA) available at
