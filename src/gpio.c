@@ -2,15 +2,15 @@
  * @file  gpio.c was buttons.c from Silabs soc-btmest-switch example code
  * @brief gpio implementation file
  *
- * @editor    Awesome Student, Awesome.Student@Colorado.edu
- * @date      Sep 15, 2020
+ * @editor    Atharv Desai, atharv.desai@colorado.edu
+ * @date      Nov 30, 2020
  *
  * @institution University of Colorado Boulder (UCB)
  * @course      ECEN 5823-001: IoT Embedded Firmware (Fall 2020)
  * @instructor  David Sluiter
  *
- * @assignment ecen5823-assignment10-AwesomeStudent
- * @due        Sep 18, 2020
+ * @assignment Final Project
+ * @due        Dec 4, 2020
  *
  * @resources  Utilized Silicon Labs' BT mesh v1.7 library
  *
@@ -253,11 +253,14 @@ void gpioLedPIRSetOff()
 /*******************************************************************************
  * GPIO initialization for PIR Interrupt. Configure pushbuttons GPIO PC8 as input
  * for external PIR interrupt
+ *
+ * @param[in] None
+ *
  ******************************************************************************/
 void pir_init()
 {
-	GPIO_PinModeSet(PIRLED_port, PIRLED_pin, gpioModeInput, 0);
-	GPIO_ExtIntConfig(PIRLED_port,PIRLED_pin, PIRLED_pin, true, true, true);
+	GPIO_PinModeSet(PIRLED_port, PIRLED_pin, gpioModeInput, 0);            // Setting appropriate pin mode
+	GPIO_ExtIntConfig(PIRLED_port,PIRLED_pin, PIRLED_pin, true, true, true);   // configuring the pin as external interrupt
 	CMU_ClockEnable(cmuClock_GPIO, true);
 	GPIOINT_Init();
 	GPIOINT_CallbackRegister(PIRLED_pin, pir_interrupt);
@@ -280,7 +283,7 @@ void pir_init()
 void pir_interrupt()
 {
 
-	if(GPIO_PinInGet(PIRLED_port,PIRLED_pin) == 1)
+	if(GPIO_PinInGet(PIRLED_port,PIRLED_pin) == 1)    // Checking of interrupt signal on the configured pin
 		{
 		printf("motion detected \n\r");
 

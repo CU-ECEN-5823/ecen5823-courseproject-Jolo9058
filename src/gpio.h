@@ -2,15 +2,15 @@
  * @file  gpio.h was buttons.h from Silabs soc-btmest-switch example code
  * @brief gpio header file
  *
- * @editor    Awesome Student, Awesome.Student@Colorado.edu
- * @date      Sep 15, 2020
+ * @editor    Atharv Desai, atharv.desai@colorado.edu
+ * @date      Nov 30, 2020
  *
  * @institution University of Colorado Boulder (UCB)
  * @course      ECEN 5823-001: IoT Embedded Firmware (Fall 2020)
  * @instructor  David Sluiter
  *
- * @assignment ecen5823-assignment10-AwesomeStudent
- * @due        Sep 18, 2020
+ * @assignment Final Project
+ * @due        Dec 4, 2020
  *
  * @resources  Utilized Silicon Labs' BT mesh v1.7 library
  *

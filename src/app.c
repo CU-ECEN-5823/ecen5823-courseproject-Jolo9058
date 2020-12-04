@@ -2,15 +2,15 @@
  * @file  app.c from Silabs soc-btmest-switch example code
  * @brief app implementation file
  *
- * @editor    Awesome Student, Awesome.Student@Colorado.edu
- * @date      Sep 15, 2020
+ * @editor    Atharv Desai, atharv.desai@colorado.edu
+ * @date      Nov 30, 2020
  *
  * @institution University of Colorado Boulder (UCB)
  * @course      ECEN 5823-001: IoT Embedded Firmware (Fall 2020)
  * @instructor  David Sluiter
  *
- * @assignment ecen5823-assignment10-AwesomeStudent
- * @due        Sep 18, 2020
+ * @assignment Final Project
+ * @due        Dec 4, 2020
  *
  * @resources  Utilized Silicon Labs' BT mesh v1.7 library
  *
@@ -1319,11 +1319,6 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 		       }
 
 
-		       // Initialize scene client model
-		      /* result = gecko_cmd_mesh_scene_client_init(0)->result;
-		       if (result) {
-		         log("mesh_scene_client_init failed, code 0x%x\r\n", result);
-		       }*/
 
 		       struct gecko_msg_mesh_node_initialized_evt_t *pData = (struct gecko_msg_mesh_node_initialized_evt_t *)&(pEvt->data);
 
@@ -1350,7 +1345,7 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 		       break;
 
 		     case gecko_evt_system_external_signal_id:
-		    // {
+
 			    	if ((pEvt->data.evt_system_external_signal.extsignals & EXT_SIGNAL_PIR) ==EXT_SIGNAL_PIR)
 			    	    			 {
 			    	    		log("PIR external event_ #1");
@@ -1478,7 +1473,7 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 		     case gecko_evt_mesh_lpn_friendship_failed_id:
 		     case gecko_evt_mesh_lpn_friendship_terminated_id:
 		       handle_lpn_events(pEvt);
-		       DI_Print("LPN with friend", 4);
+		       DI_Print("LPN with friend", 4);                     // LPN has established friendship with the friend
 
 		       break;
 
