@@ -82,8 +82,7 @@ uint16_t my_model_id = 0x1003;
 uint16_t my_element_index = 0;
 uint8_t my_request_flags =0;
 uint32_t my_transition_ms =0;
-static uint8_t level_request_count;
-static uint16_t temp_val;
+//static uint8_t level_request_count;
 char buf[30]; // for sprintf, see below
 
 
@@ -205,10 +204,15 @@ void node_init(void)
 
 }
 
-
+/*
+* FUNCTION:- send_level_request
+* DESCRIPTION:- Sends level to the server
+* PARAMETERS:- uint16_t temp_data, uint16_t delay
+* RETURN VALUE:- None
+**/
 void send_level_request(uint16_t temp_data, uint16_t delay)
 {
-	uint16_t retrans = 0;
+	//uint16_t retrans = 0;
 	//struct mesh_generic_state req_level;
 	struct mesh_generic_request req_level;
 	//req_level.kind = mesh_generic_state_level;
@@ -312,7 +316,7 @@ static void send_onoff_request(uint8_t retrans)
  ******************************************************************************/
 void change_switch_position(uint8_t position)
 {
-#if PIR_SENSOR
+#if PIR_SENSOR == 1
   switch_pos = position;
 
   // Turns light ON or OFF, using Generic OnOff model
@@ -357,24 +361,7 @@ void change_switch_position(uint8_t position)
 #endif
 } // change_switch_position()
 
-#if TEMP_SENSOR
-void send_temperature(uint16_t temp_data)
-{
-	log("temperature level %d \r\n",temp_data);
 
-	  level_request_count = 3; // Request is send 3 times to improve reliability
-
-	  //send_level_request(0);  //Send the first request
-
-	  // If there are more requests to send, start a repeating soft timer
-	  // to trigger retransmission of the request after 50 ms delay
-	  if (level_request_count > 0) {
-	    gecko_cmd_hardware_set_soft_timer(TIMER_MS_2_TIMERTICK(50),
-	                                      RETRANS_CTL_TIMER,
-	                                      REPEATING);
-	  }
-}
-#endif
 
 /*******************************************************************************
  *  Handling of message retransmission timer events.

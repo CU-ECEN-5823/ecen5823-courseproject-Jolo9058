@@ -232,20 +232,4 @@ void state_machine(struct gecko_cmd_packet* event)				//changed uint32 event
 }
 
 
-/*void i2c_state(void)
-{
-	enableSensor();
-	gecko_cmd_hardware_set_soft_timer(2650,RESTART_TIMER,1);
-	retSTAT = I2CWriteForIRQ();
-	if(retSTAT != i2cTransferInProgress)
-		log("ERROR I2cWrite");
-	SLEEP_SleepBlockEnd(1);
-	NVIC_DisableIRQ(I2C0_IRQn);
-	gecko_cmd_hardware_set_soft_timer(340,RESTART_TIMER,1);
-	retSTAT = I2CReadForIRQ();
-	if(retSTAT != i2cTransferInProgress)
-		log("ERROR I2cRead");
-	SLEEP_SleepBlockEnd(1);
-	NVIC_DisableIRQ(I2C0_IRQn);
-	float retprint = I2CTempPrint();
-}*/
+

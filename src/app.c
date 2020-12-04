@@ -62,7 +62,6 @@ static uint8_t conn_handle = 0xFF;
 /// Flag for indicating that provisioning procedure is finished
 static uint8_t provisioning_finished = 0;
 
-uint16_t a1 = 78, d1 = 0;
 
 
 #if TEMP_SENSOR || ENABLE_SLEEPING
@@ -185,16 +184,13 @@ void appMain(const gecko_configuration_t *pConfig)
   selectedFREQ = selectLXFO();
  	         	 initialize_LETIMER0(selectedFREQ);
  	         	i2cStructInit();
- // i2cStructInit();
-
 #endif
 
 #if NOISE_SENSOR
   sound_init();
-  //enable_sound_interrupts();
-
 #endif
-#if PIR_SENSOR
+
+#if PIR_SENSOR == 1
   gpioInit();
   //pir_init();
 
@@ -205,7 +201,7 @@ void appMain(const gecko_configuration_t *pConfig)
   // configuration will be "button" for those radio boards with shared pins.
   button_init();
 
-#if PIR_SENSOR
+#if PIR_SENSOR == 1
   DI_Init();
 #endif
 
@@ -297,7 +293,7 @@ static void set_device_name(bd_addr *pAddr)
 
 #else
   // create unique device name using the last two bytes of the Bluetooth address
-#if PIR_SENSOR
+#if PIR_SENSOR == 1
   sprintf(name, "PIR node %02x:%02x", pAddr->addr[1], pAddr->addr[0]);
 #endif
 
@@ -1025,22 +1021,13 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 	         log("mesh_generic_client_init_on_off failed, code 0x%x\r\n", result);
 	       }
 
-	      /* result = gecko_cmd_mesh_generic_client_init_common()->result;
-	       if (result) {
-	         log("mesh_generic_client_init_common failed, code 0x%x\r\n", result);
-	       }*/
-
 	       result = gecko_cmd_mesh_generic_client_init_level()->result;
 	       if (result) {
 	      	         log("mesh_generic_client_init_level failed, code 0x%x\r\n", result);
 	      	       }
 
 	       gecko_cmd_mesh_generic_client_init();
-	       // Initialize scene client model
-	      /* result = gecko_cmd_mesh_scene_client_init(0)->result;
-	       if (result) {
-	         log("mesh_scene_client_init failed, code 0x%x\r\n", result);
-	       }*/
+
 
 	       struct gecko_msg_mesh_node_initialized_evt_t *pData = (struct gecko_msg_mesh_node_initialized_evt_t *)&(pEvt->data);
 
@@ -1050,11 +1037,6 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 	         _my_address = pData->address;
 
 	         enable_sound_interrupts();
-			#if TEMP_SENSOR
-	         	// selectedFREQ = selectLXFO();
-	         	 //initialize_LETIMER0(selectedFREQ);
-	         	//i2cStructInit();
-			#endif
 	         node_init();
 
 	         // Initialize Low Power Node functionality
@@ -1072,26 +1054,25 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 	       break;
 
 	     case gecko_evt_system_external_signal_id:
-	    // {
 
-	    	if ((pEvt->data.evt_system_external_signal.extsignals & EXT_SIGNAL_NOISE ))
+
+	    	if ((pEvt->data.evt_system_external_signal.extsignals & EXT_SIGNAL_NOISE ))			//Ext. event set by noise sensor interrupt handler
 	    	{
 	    		    log("NOISE DETECTED\n\r");
-	    		    //log("GPIOsound in ext = %lu\n\r",GPIOsound);
 	    		    change_switch_position(ON);
-	    		    //send_level_request(a1,d1);
+
 	    	}
 	    	else if(pEvt->data.evt_system_external_signal.extsignals & I2C_SCHEDULE)
 	    	{
 	    		//SLEEP_SleepBlockEnd(2);
 	    		NVIC_DisableIRQ(I2C0_IRQn);
 	    	}
-	    	else if(pEvt->data.evt_system_external_signal.extsignals & LETIMER_COMP1_SCHEDULE)
+	    	else if(pEvt->data.evt_system_external_signal.extsignals & LETIMER_COMP1_SCHEDULE) //Ext. event set by comp1 interrupt handler
 	    	{
 	    		SLEEP_SleepBlockEnd(2);
 	    		LETIMER_IntDisable(LETIMER0,LETIMER_IFC_COMP1);
 	    	}
-	    	else if(pEvt->data.evt_system_external_signal.extsignals & LETIMER_UF_SCHEDULE)
+	    	else if(pEvt->data.evt_system_external_signal.extsignals & LETIMER_UF_SCHEDULE) //Ext. event set by UF interrupt handler
 	    	{
 	    		SLEEP_SleepBlockEnd(2);
 	    		TempReadSequence();
@@ -1242,7 +1223,7 @@ static void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *pEvt)
 
 #endif //NOISE_SENSOR
 
-#if PIR_SENSOR
+#if PIR_SENSOR == 1
 		  uint16_t result;
 		   char buf[30];
 

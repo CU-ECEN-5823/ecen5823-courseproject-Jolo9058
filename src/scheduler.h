@@ -33,7 +33,7 @@
 #include "sleep.h"
 //#include "ble.h"
 #include "native_gecko.h"
-
+#include "app.h"
 #ifdef ENABLE_LOGGING
 #define log(...) printf(__VA_ARGS__)
 #else

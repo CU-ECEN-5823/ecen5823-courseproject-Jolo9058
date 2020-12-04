@@ -52,33 +52,31 @@ void button_init(void)
 
 
 #if NOISE_SENSOR
+/*
+* FUNCTION:- sound_init
+* DESCRIPTION:- Initializes sound detector sensor pin
+* PARAMETERS:- None
+* RETURN VALUE:- None
+**/
 void sound_init(void)
 {
-  // configure pushbutton PB0 and PB1 as inputs, with pull-up enabled
-	//GPIO_DriveStrengthSet(soundPort, gpioDriveStrengthWeakAlternateStrong);
-  GPIO_PinModeSet(soundPort, soundGate, gpioModeInputPull, 1);						//now
-	//GPIO_PinModeSet(PIRLED_port, PIRLED_pin, gpioModeInput, 1);
-	//GPIO_PinModeSet(soundPort, soundGate, gpioModeInputPullFilter , 1);
-//  GPIO_PinModeSet(BSP_BUTTON1_PORT, BSP_BUTTON1_PIN, gpioModeInputPull, 1);
+  GPIO_PinModeSet(soundPort, soundGate, gpioModeInputPull, 1);
+
 }
 
 
-
+/*
+* FUNCTION:- sound_interrupt
+* DESCRIPTION:- Sound sensor interrupt Handler
+* PARAMETERS:- None
+* RETURN VALUE:- None
+**/
 void sound_interrupt(void)
 {
-	//log("In sound interrupt\n\r");
-	GPIOsound = GPIO_PinInGet(soundPort,soundGate);						//now
-	//GPIOsound = GPIO_PinInGet(PIRLED_port,PIRLED_pin);
-			/*if(GPIOsound == 0)
-			{
-				//log("Quiet\n\r");
-				//gecko_external_signal(EXT_SIGNAL_PB0_PRESS);
-			}*/
-	//log("GPIOsound = %lu\n\r",GPIOsound);
+	GPIOsound = GPIO_PinInGet(soundPort,soundGate);
 			if(GPIOsound == 1)
 			{
 				log("Noisy\n\r");
-				//GPIOsound = 0;
 				gecko_external_signal(EXT_SIGNAL_NOISE);
 			}
 }
@@ -192,6 +190,12 @@ void enable_button_interrupts(void)
 
 
 #if NOISE_SENSOR == 1
+/*
+* FUNCTION:- enable_sound_interrupts
+* DESCRIPTION:- This function enables noise sensor interrupts
+* PARAMETERS:- None
+* RETURN VALUE:- None
+**/
 void enable_sound_interrupts(void)
 {
 
@@ -233,7 +237,7 @@ void enable_sound_interrupts(void)
  * GPIO initialization. Configure pushbuttons GPIO PC9 as output for external
  * LED indicator
  ******************************************************************************/
-#if PIR_SENSOR
+#if PIR_SENSOR == 1
 void gpioInit()
 {
 	GPIO_DriveStrengthSet(PIRLED_port1, gpioDriveStrengthWeakAlternateStrong);
